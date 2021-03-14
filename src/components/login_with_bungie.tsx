@@ -1,24 +1,58 @@
 import React from "react";
-import { LoginOutline } from "@graywolfai/react-heroicons";
+import {
+  ExclamationOutline,
+  LoginOutline,
+  RefreshOutline,
+} from "@graywolfai/react-heroicons";
 import { AuthStore } from "../stores/auth";
 
 export function LoginWithBungie() {
   const login = AuthStore.useStoreActions((actions) => actions.loginWithBungie);
+  const state = AuthStore.useStoreState((state) => state.state);
   return (
     <div className="flex flex-col items-center w-full space-y-8 overflow-hidden">
       <div className="flex flex-col items-center w-full space-y-3">
-        <h2 className="text-lg font-semibold text-center text-white w-96">
-          Destiny Power Bars but with Checklists included, that’s it basically
-        </h2>
-
-        <button
-          type="button"
-          className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
-          onClick={() => login()}
-        >
-          <LoginOutline className="w-6 h-6" />
-          <span className="font-semibold">Login with Bungie.net</span>
-        </button>
+        {state === "uninitialize" ? (
+          <>
+            <h2 className="text-lg font-semibold text-center text-white w-96">
+              Destiny Power Bars but with Checklists included, that’s it
+              basically
+            </h2>
+            <button
+              type="button"
+              className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
+              onClick={() => login()}
+            >
+              <LoginOutline className="w-6 h-6" />
+              <span className="font-semibold">Login with Bungie.net</span>
+            </button>
+          </>
+        ) : state === "logging_in" ? (
+          <button
+            type="button"
+            className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
+            disabled={true}
+          >
+            <RefreshOutline className="w-6 h-6 animate-spin" />
+            <span className="font-semibold">Logging in ...</span>
+          </button>
+        ) : state === "error" ? (
+          <>
+            <ExclamationOutline className="w-8 h-8 text-white" />
+            <h2 className="text-lg font-semibold text-center text-white w-96">
+              Something Unexpected happens,
+              <br /> please try again
+            </h2>
+            <button
+              type="button"
+              className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
+              onClick={() => login()}
+            >
+              <LoginOutline className="w-6 h-6" />
+              <span className="font-semibold">Login with Bungie.net</span>
+            </button>
+          </>
+        ) : null}
       </div>
       <svg
         style={{

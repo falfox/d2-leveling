@@ -1,7 +1,4 @@
-import {
-  DestinyCharacterComponent,
-  DestinyItemComponent,
-} from "bungie-api-ts/destiny2";
+import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import { GroupUserInfoCard } from "bungie-api-ts/groupv2/interfaces";
 import {
   action,
@@ -18,9 +15,9 @@ import {
   ITEM_SLOT_BUCKETS,
   ITEM_TYPE_ARMOR,
   ITEM_TYPE_WEAPON,
+  STORAGE_ACTIVE_CHAR_ID,
   STORAGE_MANIFEST_VERSION_KEY,
   WEAPON_SLOT_BUCKETS,
-  STORAGE_ACTIVE_CHAR_ID,
 } from "../consts";
 import {
   getDestinyMembership,
@@ -77,6 +74,18 @@ interface DestinyStoreModel {
     ObjectOf<DisplayDestinyItemComponent[]>
   >;
   setArtifactPowerBonus: Action<DestinyStoreModel, number>;
+
+  setInitialData: Action<
+    DestinyStoreModel,
+    Required<{
+      memberships: DestinyStoreModel["memberships"];
+      characters: DestinyStoreModel["characters"];
+      activeCharId: DestinyStoreModel["activeCharId"];
+      topCharactersItem: DestinyStoreModel["topCharactersItem"];
+      artifactPowerBonus: DestinyStoreModel["artifactPowerBonus"];
+      milestones: DestinyStoreModel["milestones"];
+    }>
+  >;
 }
 
 export const DestinyStores = createContextStore<DestinyStoreModel>({
@@ -119,21 +128,18 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       actions.setFetching(true);
       const { Response } = await getProfileInfo();
 
-      const membership = await getDestinyMembership();
-      actions.setMembership(membership);
+      const memberships = await getDestinyMembership();
       const characters = Response.characters.data;
-
       if (!characters) {
         throw new Error("Failed to retrieve `characters` data");
       }
 
       const progressionsData = Response.characterProgressions.data;
-
       if (!progressionsData) {
         throw new Error("Failed to retrieve `profile progressions` data");
       }
-      const manifest = helpers.getState().manifest_data;
 
+      const manifest = helpers.getState().manifest_data;
       if (!manifest) {
         throw new Error("Failed to retrieve manifest data");
       }
@@ -149,6 +155,8 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           [cur]: milestones,
         };
       }, {});
+
+      console.log({ milestones });
 
       const inventoryData = Response.characterInventories.data;
       const equipmentData = Response.characterEquipment.data;
@@ -238,23 +246,24 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         };
       }, {});
 
-      actions.setMilestones(milestones);
-      actions.setTopCharactersItem(topItemsByChar);
-
       const artifactData = Response.profileProgression.data;
 
       if (!artifactData) {
         throw new Error("Failed to retrieve artifact data");
       }
-      actions.setArtifactPowerBonus(artifactData.seasonalArtifact.powerBonus);
 
       const charId =
         localStorage.getItem(STORAGE_ACTIVE_CHAR_ID) ??
         Object.keys(characters)[0];
-      console.log({ charId });
 
-      actions.setActiveCharId(charId);
-      actions.setCharacters(characters);
+      actions.setInitialData({
+        activeCharId: charId,
+        topCharactersItem: topItemsByChar,
+        artifactPowerBonus: artifactData.seasonalArtifact.powerBonus,
+        characters,
+        memberships,
+        milestones,
+      });
     } catch (error) {
       console.warn(error);
 
@@ -288,5 +297,13 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
   }),
   setArtifactPowerBonus: action((state, payload) => {
     state.artifactPowerBonus = payload;
+  }),
+  setInitialData: action((state, payload) => {
+    state.memberships = payload.memberships;
+    state.characters = payload.characters;
+    state.activeCharId = payload.activeCharId;
+    state.topCharactersItem = payload.topCharactersItem;
+    state.artifactPowerBonus = payload.artifactPowerBonus;
+    state.milestones = payload.milestones;
   }),
 });

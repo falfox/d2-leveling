@@ -38,18 +38,28 @@ export interface DisplayDestinyItemComponent extends DestinyItemComponent {
 }
 
 function App() {
-  const logged_in = AuthStore.useStoreState((state) => state.logged_in);
+  const state = AuthStore.useStoreState((state) => state.state);
+  const setState = AuthStore.useStoreActions((actions) => actions.setState);
+
+  console.log({
+    state,
+  });
 
   useEffect(() => {
     const qs = parse(window.location.search);
-    if (qs.code && !logged_in) {
-      getAccessToken(qs.code as string).then(() => {
-        window.location.href = "/";
-      });
+    if (qs.code && state === "uninitialize") {
+      setState("logging_in");
+      getAccessToken(qs.code as string)
+        .then(() => {
+          window.location.replace("/");
+        })
+        .catch((err) => {
+          setState("error");
+        });
     }
-  }, [window.location.search, logged_in]);
+  }, [window.location.search, state]);
 
-  if (!logged_in)
+  if (state !== "logged_in")
     return (
       <div
         className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
@@ -80,10 +90,32 @@ function NewApp() {
     });
   }, []);
 
-  console.log({ hasData });
-
   return (
-    <div className="antialiased">{!hasData ? "loading..." : <AppOld />}</div>
+    <div className="antialiased">
+      {!hasData ? (
+        <div
+          className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
+          style={{
+            backgroundImage:
+              "url(https://www.bungie.net/7/ca/destiny/bgs/season13/pass_overview_bg_desktop.jpg)",
+          }}
+        >
+          <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
+          <div className="relative z-10">
+            <button
+              type="button"
+              className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
+              disabled={true}
+            >
+              <RefreshOutline className="w-6 h-6 animate-spin" />
+              <span className="font-semibold">Loading Characters...</span>
+            </button>
+          </div>
+        </div>
+      ) : (
+        <AppOld />
+      )}
+    </div>
   );
 }
 
@@ -104,6 +136,7 @@ function AppOld() {
 
   console.log({
     is_fetching,
+    milestones,
   });
 
   const loadProfiles = DestinyStores.useStoreActions(
@@ -206,7 +239,7 @@ function AppOld() {
               layout
               animate="visible"
               variants={rightPanelVariants}
-              className="max-w-sm transition-all duration-200 bg-white shadow first:rounded-l-xl last:rounded-r-xl"
+              className="relative max-w-sm transition-all duration-200 bg-white shadow first:rounded-l-xl last:rounded-r-xl"
             >
               <AnimatePresence>
                 {panelView === "single" && (
