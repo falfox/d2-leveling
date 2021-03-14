@@ -20,10 +20,10 @@ import {
   WEAPON_SLOT_BUCKETS,
 } from "../consts";
 import {
+  getAllMilestones,
   getDestinyMembership,
   getManifest,
   getProfileInfo,
-  ManifestData,
 } from "../services/bungie";
 import {
   DestinyMilestoneDisplay,
@@ -33,7 +33,6 @@ import { ObjectOf } from "../utils";
 
 interface DestinyStoreModel {
   // States
-  manifest_data: ManifestData | null;
   manifest_version: string | null;
   is_fetching: boolean;
   memberships: GroupUserInfoCard[] | null;
@@ -60,7 +59,6 @@ interface DestinyStoreModel {
   setManifestData: Action<
     DestinyStoreModel,
     {
-      data: ManifestData;
       version: string;
     }
   >;
@@ -89,7 +87,6 @@ interface DestinyStoreModel {
 }
 
 export const DestinyStores = createContextStore<DestinyStoreModel>({
-  manifest_data: null,
   manifest_version: localStorage.getItem(STORAGE_MANIFEST_VERSION_KEY),
   is_fetching: true,
   memberships: null,
@@ -109,7 +106,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       if (!version) throw new Error("Failed to retrieve manifest version");
 
       actions.setManifestData({
-        data,
         version,
       });
     } catch (error) {
@@ -129,7 +125,13 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       const { Response } = await getProfileInfo();
 
       const memberships = await getDestinyMembership();
+      const milestonesData = await getAllMilestones();
+
       const characters = Response.characters.data;
+      if (!milestonesData) {
+        throw new Error("Failed to retrieve `milestones` data");
+      }
+
       if (!characters) {
         throw new Error("Failed to retrieve `characters` data");
       }
@@ -139,16 +141,80 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         throw new Error("Failed to retrieve `profile progressions` data");
       }
 
-      const manifest = helpers.getState().manifest_data;
+      const manifest = await getManifest(payload.force);
       if (!manifest) {
         throw new Error("Failed to retrieve manifest data");
       }
 
+      const allMilestonse = milestonesData.Response;
+
+      console.log({
+        allMilestonse,
+      });
+
       const milestones = Object.keys(progressionsData).reduce((acc, cur) => {
+        console.log("========================");
+
+        const characterProgresses = progressionsData[cur];
+        const characterMilestone = characterProgresses.milestones;
+        const characterProgress = characterProgresses.progressions;
+
+        console.log({
+          characterProgress,
+          characterMilestone,
+        });
+
+        // const characterQuest = characterProgresses.quests;
+
         const milestones = getPinnacleAndPowerfulMilestones(
-          progressionsData[cur].milestones,
+          allMilestonse,
           manifest
-        );
+        ).map((mile) => {
+          let completed = 0;
+
+          const activeMilestone = characterMilestone[mile.hash];
+
+          if (!activeMilestone) {
+            if (mile.dependsOn.length > 0) {
+              for (const mileHash of mile.dependsOn) {
+                // Check if the milestone depends on another milestones
+                // Ex: Trials Seven Wins ["3628293753"] depends on ["3628293757", "3628293755"]
+                const dependandMile = characterMilestone[parseInt(mileHash)];
+                // Get the other milestone progress
+                const mileActs = dependandMile?.activities;
+
+                console.log({ mileActs });
+
+                if (!mileActs?.[0]?.challenges?.[0].objective.complete) {
+                  completed = 0;
+                  break;
+                } else {
+                  completed = 1;
+                }
+              }
+            } else {
+              completed = 1;
+            }
+          } else {
+            const milestoneActivities = activeMilestone?.activities;
+
+            if (milestoneActivities?.length) {
+              const activity = milestoneActivities?.[0];
+
+              if (activity?.challenges?.length) {
+                const challenge = activity.challenges[0];
+
+                completed = challenge.objective.complete ? 1 : 0;
+              }
+            }
+          }
+
+          return {
+            ...mile,
+            phases: activeMilestone?.activities?.[0]?.phases,
+            completed,
+          };
+        });
 
         return {
           ...acc,
@@ -279,7 +345,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
     state.characters = payload;
   }),
   setManifestData: action((state, payload) => {
-    state.manifest_data = payload.data;
     state.manifest_version = payload.version;
   }),
   setFetching: action((state, payload) => {

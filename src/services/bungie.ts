@@ -9,36 +9,36 @@ import {
   DestinyItemCategoryDefinition,
   DestinyManifestComponentName,
   DestinyMilestoneDefinition,
+  DestinyObjectiveDefinition,
   DestinyProfileResponse,
   DestinyProgressionDefinition,
-  DestinyRaceDefinition,
-  DestinyRecordDefinition,
-  DestinyVendorDefinition,
+  DestinyPublicMilestone,
   getCharacter,
   getDestinyManifest,
   getDestinyManifestSlice,
   getProfile,
+  getPublicMilestones,
   HttpClientConfig,
   ServerResponse,
 } from "bungie-api-ts/destiny2";
 import { GroupUserInfoCard } from "bungie-api-ts/groupv2/interfaces";
 import { getMembershipDataById } from "bungie-api-ts/user";
 import { get, set } from "idb-keyval";
+import md5 from "md5";
 import { stringify } from "query-string";
 import { VITE_BUNGIE_API_KEY } from "../config";
 import {
+  STORAGE_ACCESS_TOKEN_EXPIRATION_KEY,
   STORAGE_ACCESS_TOKEN_KEY,
+  STORAGE_CHARACTERS_LAST_UPDATED_KEY,
+  STORAGE_DESTINY_CHARACTERS_KEY,
+  STORAGE_DESTINY_MEMBERSHIPS_KEY,
+  STORAGE_MANIFEST_COMPONENTS_MD5_KEY,
   STORAGE_MANIFEST_DATA_KEY,
   STORAGE_MANIFEST_VERSION_KEY,
   STORAGE_MEMBERSHIP_ID_KEY,
-  STORAGE_DESTINY_MEMBERSHIPS_KEY,
-  STORAGE_ACCESS_TOKEN_EXPIRATION_KEY,
-  STORAGE_DESTINY_CHARACTERS_KEY,
-  STORAGE_MANIFEST_COMPONENTS_MD5_KEY,
-  STORAGE_CHARACTERS_LAST_UPDATED_KEY,
 } from "../consts";
 import { getAccessToken } from "./auth";
-import md5 from "md5";
 
 async function $http(config: HttpClientConfig) {
   // fill in the API key, handle OAuth, etc., then make an HTTP request using the config.
@@ -143,7 +143,7 @@ export async function getProfileInfo(): Promise<
       DestinyComponentType.ItemInstances,
       DestinyComponentType.ProfileProgression,
       DestinyComponentType.CharacterProgressions,
-      // DestinyComponentType.CharacterActivities,
+      DestinyComponentType.CharacterActivities,
     ],
     destinyMembershipId: destinyMemberships[0].membershipId,
     membershipType: destinyMemberships[0].membershipType,
@@ -164,20 +164,11 @@ export interface ManifestData {
   DestinyInventoryItemDefinition: {
     [key: string]: DestinyInventoryItemDefinition | undefined;
   };
-  DestinyVendorDefinition: {
-    [key: string]: DestinyVendorDefinition | undefined;
-  };
-  DestinyRecordDefinition: {
-    [key: string]: DestinyRecordDefinition | undefined;
-  };
   DestinyItemCategoryDefinition: {
     [key: string]: DestinyItemCategoryDefinition | undefined;
   };
   DestinyProgressionDefinition: {
     [key: string]: DestinyProgressionDefinition | undefined;
-  };
-  DestinyRaceDefinition: {
-    [key: string]: DestinyRaceDefinition | undefined;
   };
   DestinyChecklistDefinition: {
     [key: string]: DestinyChecklistDefinition | undefined;
@@ -190,6 +181,9 @@ export interface ManifestData {
   };
   DestinyInventoryBucketDefinition: {
     [key: string]: DestinyInventoryBucketDefinition | undefined;
+  };
+  DestinyObjectiveDefinition: {
+    [key: string]: DestinyObjectiveDefinition | undefined;
   };
 }
 
@@ -207,22 +201,17 @@ export async function getManifest(
   );
 
   const destinyManifest = await getDestinyManifest($http);
-  console.log({
-    destinyManifest,
-  });
 
   const tableNames: DestinyManifestComponentName[] = [
     "DestinyInventoryItemDefinition",
-    "DestinyVendorDefinition",
-    "DestinyRecordDefinition",
     "DestinyItemCategoryDefinition",
     "DestinyProgressionDefinition",
-    "DestinyRaceDefinition",
     "DestinyChecklistDefinition",
     "DestinyMilestoneDefinition",
     "DestinyActivityDefinition",
     "DestinyInventoryBucketDefinition",
     "DestinyProgressionDefinition",
+    "DestinyObjectiveDefinition",
   ];
 
   const manifestKeysMd5 = md5(tableNames.join(","));
@@ -263,4 +252,10 @@ export async function getCharacterInfo(
   });
 }
 
-export async function getInventories() {}
+export async function getAllMilestones(): Promise<
+  ServerResponse<{
+    [key: string]: DestinyPublicMilestone;
+  }>
+> {
+  return await getPublicMilestones($http);
+}
