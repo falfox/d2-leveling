@@ -5,6 +5,7 @@ import React from "react";
 import { DisplayDestinyItemComponent } from "../App";
 import { CLASS_NAMES, ITEM_BUCKET_SLOTS, RACE_NAMES } from "../consts";
 import { DestinyStores } from "../stores/destiny";
+import { calculateMaxPowerExactByTopItems } from "../utils";
 import { PowerBar } from "./power_bar";
 
 export function SingleCharacterPanel({
@@ -17,11 +18,7 @@ export function SingleCharacterPanel({
   const { is_fetching, artifactPowerBonus } = DestinyStores.useStoreState(
     (state) => state
   );
-  const currentMaxPowerExact =
-    (topItemBySlot?.reduce(
-      (acc, cur) => acc + cur.instanceData.primaryStat.value,
-      0
-    ) ?? 8) / 8;
+  const currentMaxPowerExact = calculateMaxPowerExactByTopItems(topItemBySlot);
 
   const currentMaxPower = floor(currentMaxPowerExact);
   const currentMaxPowerRemainder = currentMaxPowerExact % 1;

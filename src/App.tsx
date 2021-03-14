@@ -13,17 +13,14 @@ import {
 import clsx from "clsx";
 import { AnimatePresence, AnimateSharedLayout, motion } from "framer-motion";
 import { parse } from "query-string";
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useRef, useState } from "react";
+import { ChecklistsPanel } from "./components/checklists_panel";
 import { LoginWithBungie } from "./components/login_with_bungie";
 import { MembershipBadge } from "./components/membership_badge";
 import { SingleCharacterPanel } from "./components/single_character_panel";
-import {
-  ALL_POWERFUL_ITEM_HASH,
-  CLASS_NAMES,
-  PINNACLE_ITEM_HASH,
-} from "./consts";
+import { CLASS_NAMES } from "./consts";
+import { useKeyPress } from "./hooks/useKeyPress";
 import { getAccessToken } from "./services/auth";
-import { CUSTOM_MILESTONE_NAMES } from "./services/destiny/milestones";
 import { AuthStore } from "./stores/auth";
 import { DestinyStores } from "./stores/destiny";
 
@@ -126,25 +123,39 @@ function AppOld() {
 
   const [panelView, setPanelView] = useState<"single" | "multi">("single");
   const {
-    activeCharId,
     characters,
     memberships,
     topCharactersItem,
     is_fetching,
     milestones,
   } = DestinyStores.useStoreState((state) => state);
-
-  console.log({
-    is_fetching,
-    milestones,
-  });
-
+  const activeCharId = DestinyStores.useStoreState(
+    (state) => state.activeCharId
+  );
   const loadProfiles = DestinyStores.useStoreActions(
     (actions) => actions.loadProfiles
   );
   const setActiveCharId = DestinyStores.useStoreActions(
     (actions) => actions.setActiveCharId
   );
+  console.log({
+    is_fetching,
+  });
+
+  const [hideCompleted, setHideCompleted] = useState(false);
+  const loadingRef = useRef(is_fetching);
+
+  useEffect(() => {
+    loadingRef.current = is_fetching;
+  }, [is_fetching]);
+
+  useKeyPress("r", () => {
+    if (!loadingRef.current) {
+      loadProfiles({
+        force: false,
+      });
+    }
+  });
 
   if (!characters) throw new Error("Missing characters");
   if (!activeCharId) throw new Error("Missing active character");
@@ -264,7 +275,12 @@ function AppOld() {
                             }}
                             type="button"
                             key={char.characterId}
-                            className="flex flex-col justify-center text-white bg-white bg-no-repeat bg-cover rounded-lg shadow-md w-36 px-14 h-14"
+                            className={clsx(
+                              "flex flex-col justify-center text-white bg-white bg-no-repeat bg-cover rounded-lg shadow-md w-36 px-14 h-14 transform transition-transform",
+                              {
+                                "scale-110": char.characterId === activeCharId,
+                              }
+                            )}
                             style={{
                               backgroundImage: `url(https://www.bungie.net/${char.emblemBackgroundPath})`,
                             }}
@@ -337,88 +353,10 @@ function AppOld() {
                   exit="hidden"
                   className="max-w-sm overflow-y-auto bg-white shadow rounded-r-xl"
                 >
-                  <div className="p-6">
-                    <div className="flex items-center justify-between pt-6">
-                      <h3 className="text-2xl font-bold align-bottom">
-                        Checklists
-                      </h3>
-                      <div className="flex items-center space-x-2">
-                        <input
-                          type="checkbox"
-                          name="hide_completed"
-                          className="text-blue-600 rounded"
-                        />
-                        <span className="text-sm font-medium">
-                          Hide Completed
-                        </span>
-                      </div>
-                    </div>
-
-                    <div className="pt-6">
-                      <h4 className="pb-2 text-lg font-semibold">Pinnacle</h4>
-                      <ul className="space-y-4">
-                        {milestones[activeCharId]
-                          ?.filter((mile) =>
-                            mile.rewardItems.some(
-                              (i) => i.itemHash === PINNACLE_ITEM_HASH
-                            )
-                          )
-                          .map((mile) => (
-                            <li
-                              className="flex items-center space-x-2 font-semibold"
-                              key={mile.hash}
-                            >
-                              <input
-                                type="checkbox"
-                                name="hide_completed"
-                                className="flex-shrink-0 w-5 h-5 rounded"
-                                disabled={true}
-                              />
-                              <span
-                                className="w-full truncate"
-                                title={mile.friendlyName}
-                              >
-                                {CUSTOM_MILESTONE_NAMES[mile.friendlyName] ??
-                                  mile.displayProperties.name}
-                              </span>
-                              <span className="tabular-nums">+2</span>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-
-                    <div className="pt-6">
-                      <h4 className="pb-2 text-lg font-semibold">Powerful</h4>
-                      <ul className="space-y-4">
-                        {milestones[activeCharId]
-                          ?.filter((mile) =>
-                            mile.rewardItems.some((i) =>
-                              ALL_POWERFUL_ITEM_HASH.includes(i.itemHash)
-                            )
-                          )
-                          .map((mile) => (
-                            <li
-                              className="flex items-center space-x-2 font-semibold"
-                              key={mile.hash}
-                            >
-                              <input
-                                type="checkbox"
-                                name="hide_completed"
-                                className="flex-shrink-0 w-5 h-5 rounded"
-                                disabled={true}
-                              />
-                              <span
-                                className="w-full truncate"
-                                title={mile.friendlyName}
-                              >
-                                {mile.displayProperties.name}
-                              </span>
-                              <span className="tabular-nums">+0</span>
-                            </li>
-                          ))}
-                      </ul>
-                    </div>
-                  </div>
+                  <ChecklistsPanel
+                    hideCompleted={hideCompleted}
+                    handleHideToggle={(checked) => setHideCompleted(checked)}
+                  />
                 </motion.div>
               )}
             </AnimatePresence>

@@ -3,9 +3,9 @@ import {
   DestinyItemComponent,
   DestinyItemInstanceComponent,
 } from "bungie-api-ts/destiny2";
+import { DisplayDestinyItemComponent } from "./App";
 import { ITEM_BUCKET_SLOTS, ITEM_TYPE_ARMOR, ITEM_TYPE_WEAPON } from "./consts";
 import { ManifestData } from "./services/bungie";
-import { DisplayDestinyItemComponent } from "./App";
 
 export interface ObjectOf<T> {
   [key: string]: T;
@@ -82,3 +82,14 @@ export const isItemEquippableByCharacter = (
   // Let's ignore the rest for now
   return true;
 };
+
+export function calculateMaxPowerExactByTopItems(
+  topItemBySlot: DisplayDestinyItemComponent[] | null
+) {
+  return (
+    (topItemBySlot?.reduce(
+      (acc, cur) => acc + cur.instanceData.primaryStat.value,
+      0
+    ) ?? 8) / 8
+  );
+}
