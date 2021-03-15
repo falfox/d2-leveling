@@ -13,7 +13,7 @@ export function MembershipBadge() {
 
   return (
     <div className="absolute top-0 left-0 -mt-12">
-      <div className="flex items-center justify-start w-full py-4 space-x-2">
+      <div className="flex items-center justify-start w-full py-4 pl-4 space-x-2">
         <img src={`https://www.bungie.net${membership.iconPath}`} className="w-5 h-5" />
         <span className="font-bold text-white">{membership.displayName}</span>
         <button

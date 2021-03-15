@@ -79,7 +79,7 @@ function NewApp() {
   const loadProfiles = DestinyStores.useStoreActions(
     (actions) => actions.loadProfiles
   );
-  const { hasData } = DestinyStores.useStoreState((state) => state);
+  const { hasData, errorText } = DestinyStores.useStoreState((state) => state);
 
   useEffect(() => {
     loadProfiles({
@@ -98,16 +98,24 @@ function NewApp() {
           }}
         >
           <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
-          <div className="relative z-10">
-            <button
-              type="button"
-              className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
-              disabled={true}
-            >
-              <RefreshOutline className="w-6 h-6 animate-spin" />
-              <span className="font-semibold">Loading Characters...</span>
-            </button>
-          </div>
+          {errorText ? (
+            <>
+              <h2 className="relative z-20 text-lg font-semibold text-center text-white w-96">
+                {errorText}
+              </h2>
+            </>
+          ) : (
+            <div className="relative z-10">
+              <button
+                type="button"
+                className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
+                disabled={true}
+              >
+                <RefreshOutline className="w-6 h-6 animate-spin" />
+                <span className="font-semibold">Loading Characters...</span>
+              </button>
+            </div>
+          )}
         </div>
       ) : (
         <AppOld />
@@ -181,7 +189,7 @@ function AppOld() {
           <div className="relative w-192">
             <MembershipBadge />
             <div className="absolute top-0 right-0 -mt-12">
-              <div className="flex items-center justify-end w-full py-4 space-x-4">
+              <div className="flex items-center justify-end w-full py-4 pr-4 space-x-4">
                 <button
                   title="Multi Characters View"
                   onClick={() => {
@@ -216,7 +224,7 @@ function AppOld() {
         <div
           className="flex justify-center w-full"
           style={{
-            height: "656px",
+            height: "620px",
           }}
         >
           <AnimateSharedLayout>

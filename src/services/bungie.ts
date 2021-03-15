@@ -76,13 +76,20 @@ async function $http(config: HttpClientConfig) {
       try {
         const messageData = await response.json();
         if (messageData && messageData.ErrorStatus === "SystemDisabled") {
-          //   throw new BungieSystemDisabledError();
+          // throw new BungieSystemDisabledError();
         }
       } catch (e) {
         /* Do nothing if unrecognised or un-parseable 503 */
       }
+    } else {
+      try {
+        const messageData = await response.json();
+
+        throw new Error(messageData.Message);
+      } catch (e) {
+        throw e;
+      }
     }
-    throw Error(response.status.toString());
   }
   return await response.json();
 }

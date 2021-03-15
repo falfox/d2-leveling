@@ -1,7 +1,13 @@
 import { FlagSolid } from "@graywolfai/react-heroicons";
 import clsx from "clsx";
 import React from "react";
-import { PINNACLE_ITEM_HASH } from "../consts";
+import {
+  PINNACLE_ITEM_HASH,
+  PINNACLE_ITEM_WEAK_HASH,
+  POWERFUL_TIER_1_ITEM_HASH,
+  POWERFUL_TIER_2_ITEM_HASH,
+  POWERFUL_TIER_3_ITEM_HASH,
+} from "../consts";
 import {
   CUSTOM_MILESTONES_PROPERTIES,
   DestinyMilestoneDisplay,
@@ -15,6 +21,7 @@ export function ChecklistItem({
   hardCapReached: boolean;
 }) {
   const completed = milestone.completed;
+  const rewardItem = milestone.rewardItems?.[0].itemHash;
 
   return (
     <li
@@ -67,9 +74,14 @@ export function ChecklistItem({
         )}
       </div>
       <span className="flex-shrink-0 tabular-nums">
-        {milestone.rewardItems?.[0].itemHash === PINNACLE_ITEM_HASH
-          ? `+${hardCapReached ? 2 : 5}`
-          : `+${hardCapReached ? 0 : 3}`}
+        {rewardItem === PINNACLE_ITEM_HASH && `+${hardCapReached ? 2 : 5}`}
+        {rewardItem === PINNACLE_ITEM_WEAK_HASH && `+${hardCapReached ? 1 : 4}`}
+        {rewardItem === POWERFUL_TIER_3_ITEM_HASH &&
+          `+${hardCapReached ? 0 : 5}`}
+        {rewardItem === POWERFUL_TIER_2_ITEM_HASH &&
+          `+${hardCapReached ? 0 : 4}`}
+        {rewardItem === POWERFUL_TIER_1_ITEM_HASH &&
+          `+${hardCapReached ? 0 : 3}`}
       </span>
     </li>
   );

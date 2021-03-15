@@ -12,6 +12,7 @@ import {
 import { mapValues, maxBy } from "lodash";
 import { DisplayDestinyItemComponent } from "../App";
 import {
+  CLASS_NAMES,
   ITEM_SLOT_BUCKETS,
   ITEM_TYPE_ARMOR,
   ITEM_TYPE_WEAPON,
@@ -42,8 +43,10 @@ interface DestinyStoreModel {
   hasData: Computed<DestinyStoreModel, boolean>;
   activeCharId: string | null;
   artifactPowerBonus: number;
+  errorText: string | null;
 
   // Actions and Thunks
+  setErrorText: Action<DestinyStoreModel, string | null>;
   loadManifest: Thunk<
     DestinyStoreModel,
     {
@@ -96,7 +99,11 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
   milestones: null,
   topCharactersItem: null,
   artifactPowerBonus: 0,
+  errorText: null,
 
+  setErrorText: action((state, payload) => {
+    state.errorText = payload;
+  }),
   loadManifest: thunk(async (actions, payload) => {
     try {
       actions.setFetching(true);
@@ -109,6 +116,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         version,
       });
     } catch (error) {
+      actions.setErrorText(error.message);
       console.warn({
         error,
       });
@@ -140,17 +148,17 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       if (!progressionsData) {
         throw new Error("Failed to retrieve `profile progressions` data");
       }
+      const activitiesData = Response.characterActivities.data;
+      if (!activitiesData) {
+        throw new Error("Failed to retrieve `profile progressions` data");
+      }
 
       const manifest = await getManifest(payload.force);
       if (!manifest) {
         throw new Error("Failed to retrieve manifest data");
       }
 
-      const allMilestonse = milestonesData.Response;
-
-      console.log({
-        allMilestonse,
-      });
+      const allMilestones = milestonesData.Response;
 
       const milestones = Object.keys(progressionsData).reduce((acc, cur) => {
         console.log("========================");
@@ -158,19 +166,132 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         const characterProgresses = progressionsData[cur];
         const characterMilestone = characterProgresses.milestones;
         const characterProgress = characterProgresses.progressions;
+        const characterActivities = activitiesData[cur];
+
+        console.log("CHARACTER : " + CLASS_NAMES[characters[cur].classType]);
 
         console.log({
           characterProgress,
           characterMilestone,
         });
 
+        // Inject Weekly Harbinger to PublicMilestones
+        allMilestones[1086730368] = {
+          activities:
+            manifest.DestinyMilestoneDefinition[1086730368]?.activities.map(
+              (a) => ({
+                ...a,
+                booleanActivityOptions: {},
+                challengeObjectiveHashes: [1259975935],
+                modifierHashes: [],
+                phaseHashes: [],
+              })
+            ) ?? [],
+          availableQuests: [],
+          milestoneHash: 1086730368,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Inject Weekly Exo Challenge to PublicMilestones
+        allMilestones[1713200903] = {
+          activities:
+            manifest.DestinyMilestoneDefinition[1713200903]?.activities.map(
+              (a) => ({
+                ...a,
+                booleanActivityOptions: {},
+                challengeObjectiveHashes: [],
+                modifierHashes: [],
+                phaseHashes: [],
+              })
+            ) ?? [],
+          availableQuests: [],
+          milestoneHash: 1713200903,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        for (const act of characterActivities.availableActivities) {
+          if (act.activityHash == 4212753278) {
+            // presage master
+
+            console.log({
+              act,
+            });
+
+            allMilestones[3278614711] = {
+              activities: [
+                {
+                  ...act,
+                  challengeObjectiveHashes: [3278614711],
+                  phaseHashes: [],
+                },
+              ],
+              availableQuests: [],
+              milestoneHash: 3278614711,
+              order: 9000,
+              vendorHashes: [],
+              vendors: [],
+            };
+
+            characterMilestone[3278614711] = {
+              activities: [act],
+              availableQuests: [],
+              milestoneHash: 3278614711,
+              order: 9000,
+              rewards: [
+                {
+                  rewardCategoryHash: 326786556,
+                  entries: [
+                    {
+                      earned: false,
+                      redeemed: false,
+                      rewardEntryHash: 326786556,
+                    },
+                  ],
+                },
+              ],
+              values: {},
+              vendorHashes: [],
+              vendors: [],
+            };
+          }
+          // else if (aa.recommendedLight == (Const.SEASON_PINNACLE_CAP + 20)) {
+          //     // while we're here check for Empire Hunt pinnacle.
+          //     // must be 1280 or don't bother looking (even though the object shows up at lower PLs)
+          //     const vDesc: any = this.destinyCacheService.cache.Activity[aa.activityHash];
+          //     // is this an empire hunt
+          //     if (vDesc?.displayProperties?.name?.startsWith('Empire Hunt')) {
+          //         hasAccessTo1280EmpireHunt = true;
+          //         if (aa.challenges?.length > 0) {
+          //             for (const challenge of aa.challenges) {
+          //                 if (challenge.objective?.objectiveHash == 1980717736) {
+          //                     // if this is here it shouldn't be complete, these disappear when complete
+          //                     if (!challenge.objective.complete) {
+          //                         incomplete1280Hunt = true;
+          //                         break;
+          //                     }
+
+          //                 }
+          //             }
+          //         }
+          //     }
+          // }
+        }
+
         // const characterQuest = characterProgresses.quests;
+        console.log({
+          allMilestones,
+        });
 
         const milestones = getPinnacleAndPowerfulMilestones(
-          allMilestonse,
+          allMilestones,
           manifest
         ).map((mile) => {
           let completed = 0;
+          let hasAccess = false;
 
           const activeMilestone = characterMilestone[mile.hash];
 
@@ -179,23 +300,51 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               for (const mileHash of mile.dependsOn) {
                 // Check if the milestone depends on another milestones
                 // Ex: Trials Seven Wins ["3628293753"] depends on ["3628293757", "3628293755"]
-                const dependandMile = characterMilestone[parseInt(mileHash)];
+                const dependentMile = characterMilestone[parseInt(mileHash)];
                 // Get the other milestone progress
-                const mileActs = dependandMile?.activities;
+                const mileActs = dependentMile?.activities;
 
-                console.log({ mileActs });
+                if (mileActs?.length) {
+                  const characterActivity =
+                    characterActivities.availableActivities[
+                      mileActs[0].activityHash
+                    ];
+
+                  hasAccess = characterActivity?.canJoin ?? false;
+                }
 
                 if (!mileActs?.[0]?.challenges?.[0].objective.complete) {
                   completed = 0;
+
                   break;
                 } else {
                   completed = 1;
                 }
               }
             } else {
+              console.log({
+                acts:
+                  manifest.DestinyMilestoneDefinition[mile.hash]?.activities,
+                avail: characterActivities.availableActivities.map((a) => ({
+                  name:
+                    manifest.DestinyActivityDefinition[a.activityHash]
+                      ?.displayProperties.name,
+                  data: manifest.DestinyActivityDefinition[a.activityHash],
+                  a: a,
+                })),
+              });
+
+              hasAccess = characterActivities.availableActivities.some(
+                (act) =>
+                  act.canJoin &&
+                  manifest.DestinyMilestoneDefinition[mile.hash]?.activities
+                    ?.map((a) => a.activityHash)
+                    .includes(act.activityHash)
+              );
               completed = 1;
             }
           } else {
+            hasAccess = true;
             const milestoneActivities = activeMilestone?.activities;
 
             if (milestoneActivities?.length) {
@@ -205,6 +354,9 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                 const challenge = activity.challenges[0];
 
                 completed = challenge.objective.complete ? 1 : 0;
+              } else {
+                // Presage challenges will missing if completed
+                completed = 1;
               }
             }
           }
@@ -213,6 +365,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
             ...mile,
             phases: activeMilestone?.activities?.[0]?.phases,
             completed,
+            hasAccess,
           };
         });
 
@@ -331,9 +484,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         milestones,
       });
     } catch (error) {
-      console.warn(error);
-
-      // TOOD: handle errors
+      actions.setErrorText(error.message);
     } finally {
       actions.setFetching(false);
     }

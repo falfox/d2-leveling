@@ -1,5 +1,5 @@
 import React from "react";
-import { ALL_POWERFUL_ITEM_HASH, PINNACLE_ITEM_HASH } from "../consts";
+import { ALL_PINNACLE_ITEM_HASH, ALL_POWERFUL_ITEM_HASH } from "../consts";
 import { DestinyStores } from "../stores/destiny";
 import { calculateMaxPowerExactByTopItems } from "../utils";
 import { ChecklistItem } from "./checklist_item";
@@ -49,10 +49,14 @@ export function ChecklistsPanel({
             ?.filter((mile) => {
               if (hideCompleted && mile.completed) return false;
 
-              return mile.rewardItems.some(
-                (i) => i.itemHash === PINNACLE_ITEM_HASH
+              return (
+                mile.hasAccess &&
+                mile.rewardItems.some((i) =>
+                  ALL_PINNACLE_ITEM_HASH.includes(i.itemHash)
+                )
               );
             })
+            .sort((mile) => mile.rewardItems?.[0].itemHash)
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}
@@ -70,10 +74,14 @@ export function ChecklistsPanel({
             ?.filter(function (mile) {
               if (hideCompleted && mile.completed) return false;
 
-              return mile.rewardItems.some((i) =>
-                ALL_POWERFUL_ITEM_HASH.includes(i.itemHash)
+              return (
+                mile.hasAccess &&
+                mile.rewardItems.some((i) =>
+                  ALL_POWERFUL_ITEM_HASH.includes(i.itemHash)
+                )
               );
             })
+            .sort((mile) => mile.rewardItems?.[0].itemHash)
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}

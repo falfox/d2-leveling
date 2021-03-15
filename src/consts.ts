@@ -6,7 +6,8 @@ export const STORAGE_MEMBERSHIP_ID_KEY = "bungie_membership_id";
 export const STORAGE_DESTINY_MEMBERSHIPS_KEY = "bungie_destiny_memberships";
 
 export const STORAGE_DESTINY_CHARACTERS_KEY = "bungie_destiny_characters";
-export const STORAGE_CHARACTERS_LAST_UPDATED_KEY = "bungie_characters_last_updated";
+export const STORAGE_CHARACTERS_LAST_UPDATED_KEY =
+  "bungie_characters_last_updated";
 
 export const STORAGE_MANIFEST_DATA_KEY = "manifest_data";
 export const STORAGE_MANIFEST_VERSION_KEY = "manifest_version";
@@ -54,14 +55,18 @@ export const POSTMASTER_ITEMS_BUCKET = 215593132;
 export const VAULT_ITEMS_BUCKET = 138197802;
 
 export const PINNACLE_ITEM_HASH = 73143230;
-export const POWERFUL_ITEM_HASH = 4039143015;
+export const PINNACLE_ITEM_WEAK_HASH = 4039143015;
 export const POWERFUL_TIER_1_ITEM_HASH = 3114385605;
 export const POWERFUL_TIER_2_ITEM_HASH = 3114385606;
 export const POWERFUL_TIER_3_ITEM_HASH = 3114385607;
 export const POWERFUL_LEGACY_GEAR_ITEM_HASH = 2246571627;
 
+export const ALL_PINNACLE_ITEM_HASH = [
+  PINNACLE_ITEM_HASH,
+  PINNACLE_ITEM_WEAK_HASH,
+];
+
 export const ALL_POWERFUL_ITEM_HASH = [
-  POWERFUL_ITEM_HASH,
   POWERFUL_TIER_1_ITEM_HASH,
   POWERFUL_TIER_2_ITEM_HASH,
   POWERFUL_TIER_3_ITEM_HASH,

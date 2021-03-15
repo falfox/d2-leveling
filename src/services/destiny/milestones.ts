@@ -5,7 +5,7 @@ import {
   DestinyMilestoneChallengeActivityDefinition,
   DestinyPublicMilestone,
 } from "bungie-api-ts/destiny2";
-import { PINNACLE_ITEM_HASH } from "../../consts";
+import { PINNACLE_ITEM_HASH, PINNACLE_ITEM_WEAK_HASH } from "../../consts";
 import { ManifestData } from "../bungie";
 
 export const MADE_UP_MILESTONES: DestinyPublicMilestone[] = [];
@@ -15,16 +15,7 @@ export const ALL_AVAILABLE_CHALLENGES = [];
 export const CUSTOM_MILESTONES_PROPERTIES: {
   [key: string]: {
     name?: string;
-    rewards?: {
-      pinnacle?: {
-        beforeHardCap: number;
-        afterHardCap: number;
-      };
-      powerful?: {
-        beforeHardCap: number;
-        afterHardCap: number;
-      };
-    };
+    rewards?: string[];
   };
 } = {
   MILESTONE_WEEKLY_PROPHECY_DUNGEON_PINNACLE: {
@@ -34,12 +25,7 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
     name: "Nightfall 100k Score",
   },
   MILESTONE_WEEKLY_CRUCIBLE_ANY: {
-    rewards: {
-      pinnacle: {
-        beforeHardCap: 3,
-        afterHardCap: 1,
-      },
-    },
+    rewards: [],
   },
   MILESTONE_WEEKLY_BATTLEGROUNDS_FIRST: {
     name: "Weekly Battlegrounds Playlist (3)",
@@ -63,6 +49,7 @@ export interface DestinyMilestoneDisplay {
   completed: number;
   maxCompleted: number;
   dependsOn: string[];
+  hasAccess: boolean;
 }
 
 export function getPinnacleAndPowerfulMilestones(
@@ -72,6 +59,38 @@ export function getPinnacleAndPowerfulMilestones(
   manifest: ManifestData
 ): DestinyMilestoneDisplay[] {
   const reducedMilestones = [];
+
+  const prophecy = manifest.DestinyMilestoneDefinition[825965416];
+
+  if (!prophecy) throw new Error("Failed to retrieve prophecy definition");
+
+  // Borrows defs from Prophecy
+  manifest.DestinyMilestoneDefinition[3278614711] = {
+    ...prophecy,
+    activities: [
+      {
+        activityHash: 4212753278,
+        challenges: [
+          {
+            challengeObjectiveHash: 3278614711,
+          },
+        ],
+        activityGraphNodes: [],
+        phases: [],
+      },
+    ],
+    defaultOrder: 9000,
+    displayProperties: {
+      ...prophecy?.displayProperties,
+      description:
+        "Search the Glykon to earn Dead Man's Tale, and get yourself a Pinnacle drop while you're there",
+      name: "Weekly Presage Challenge",
+      icon:
+        "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
+    },
+    friendlyName: "PRESAGE_WEEKLY_CHALLENGE",
+  };
+
   const filtered = Object.keys(milestones).filter((k) => {
     const def = manifest.DestinyMilestoneDefinition[k];
     return (
@@ -90,18 +109,6 @@ export function getPinnacleAndPowerfulMilestones(
 
     let rewardItems: DestinyItemQuantity[] = [];
 
-    // if (mileDefs?.activities?.length) {
-    //   const activity = mileDefs.activities[0];
-
-    //   if (activity?.challenges?.length) {
-    //     const challenge = activity.challenges[0];
-
-    //     const objective =
-    //       manifest.DestinyObjectiveDefinition[challenge.challengeObjectiveHash];
-    //     if (!objective) continue;
-    //   }
-    // }
-
     const rewards = mileDefs.rewards;
 
     if (rewards) {
@@ -113,12 +120,29 @@ export function getPinnacleAndPowerfulMilestones(
         .map((ent) => ent.items)
         .flat();
     } else {
+      // Deep Stone Crypt
       if (mile.milestoneHash === 541780856) {
         rewardItems.push({
           itemHash: PINNACLE_ITEM_HASH,
           quantity: 1,
         });
       }
+    }
+
+    if ([1437935813, 3448738070, 3312774044].includes(mile.milestoneHash)) {
+      // Weekly Vanguard, Gambit, and Crucible
+      rewardItems = [
+        {
+          itemHash: PINNACLE_ITEM_WEAK_HASH,
+          quantity: 1,
+        },
+      ];
+    }
+
+    if (mile.milestoneHash === 1713200903) {
+      console.log({
+        exo: rewardItems,
+      });
     }
 
     let dependsOn: string[] = [];
@@ -150,6 +174,7 @@ export function getPinnacleAndPowerfulMilestones(
       completed: 0, // This is just placeholder
       maxCompleted: mile.activities?.[0].phaseHashes?.length ?? 1, // Phases for Raids
       dependsOn,
+      hasAccess: false,
     };
 
     reducedMilestones.push(milestoneDisplay);
