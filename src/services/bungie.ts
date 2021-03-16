@@ -71,14 +71,17 @@ async function $http(config: HttpClientConfig) {
   if (response.status !== 200) {
     if (response.status === 401) {
       //   Auth Error
+      throw new Error("Authentication Error");
     }
     if (response.status === 503) {
       try {
         const messageData = await response.json();
         if (messageData && messageData.ErrorStatus === "SystemDisabled") {
           // throw new BungieSystemDisabledError();
+          throw new Error("Failed to connect to Bungie.net");
         }
       } catch (e) {
+        throw new Error(e);
         /* Do nothing if unrecognised or un-parseable 503 */
       }
     } else {
