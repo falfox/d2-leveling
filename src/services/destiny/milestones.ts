@@ -96,8 +96,8 @@ export function getPinnacleAndPowerfulMilestones(
     return (
       def &&
       // def.milestoneType === DestinyMilestoneType.Weekly &&
-      k !== "534869653"
-      // Skip XuR
+      !["534869653", "4253138191"].includes(k)
+      // Skip XuR and Clan Objectives for now
     );
   });
 
@@ -120,10 +120,16 @@ export function getPinnacleAndPowerfulMilestones(
         .map((ent) => ent.items)
         .flat();
     } else {
-      // Deep Stone Crypt
       if (mile.milestoneHash === 541780856) {
+        // Deep Stone Crypt
         rewardItems.push({
           itemHash: PINNACLE_ITEM_HASH,
+          quantity: 1,
+        });
+      } else if (mile.milestoneHash === 3603098564) {
+        // Clan Rewards 5K EXP
+        rewardItems.push({
+          itemHash: PINNACLE_ITEM_WEAK_HASH,
           quantity: 1,
         });
       }
@@ -137,12 +143,6 @@ export function getPinnacleAndPowerfulMilestones(
           quantity: 1,
         },
       ];
-    }
-
-    if (mile.milestoneHash === 1713200903) {
-      console.log({
-        exo: rewardItems,
-      });
     }
 
     let dependsOn: string[] = [];

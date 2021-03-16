@@ -296,7 +296,11 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           const activeMilestone = characterMilestone[mile.hash];
 
           if (!activeMilestone) {
-            if (mile.dependsOn.length > 0) {
+            if (mile.hash === 3603098564) {
+              hasAccess = true;
+              // Add complete status for Clan Rewards
+              completed = 1;
+            } else if (mile.dependsOn.length > 0) {
               for (const mileHash of mile.dependsOn) {
                 // Check if the milestone depends on another milestones
                 // Ex: Trials Seven Wins ["3628293753"] depends on ["3628293757", "3628293755"]
@@ -322,18 +326,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                 }
               }
             } else {
-              console.log({
-                acts:
-                  manifest.DestinyMilestoneDefinition[mile.hash]?.activities,
-                avail: characterActivities.availableActivities.map((a) => ({
-                  name:
-                    manifest.DestinyActivityDefinition[a.activityHash]
-                      ?.displayProperties.name,
-                  data: manifest.DestinyActivityDefinition[a.activityHash],
-                  a: a,
-                })),
-              });
-
               hasAccess = characterActivities.availableActivities.some(
                 (act) =>
                   act.canJoin &&
