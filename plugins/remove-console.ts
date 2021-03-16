@@ -1,5 +1,5 @@
 import { Plugin } from "vite";
-const fileRegex = /\.(ts|tsx)$/;
+const fileRegex = /\.(ts|tsx|js)$/;
 
 export default function removeConsolePlugin(): Plugin {
   return {
