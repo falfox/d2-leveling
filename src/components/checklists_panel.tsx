@@ -56,7 +56,10 @@ export function ChecklistsPanel({
                 )
               );
             })
-            .sort((mile) => mile.rewardItems?.[0].itemHash)
+            .sort(
+              (a, b) =>
+                a.rewardItems?.[0].itemHash - b.rewardItems?.[0].itemHash
+            )
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}
@@ -81,7 +84,10 @@ export function ChecklistsPanel({
                 )
               );
             })
-            .sort((mile) => mile.rewardItems?.[0].itemHash)
+            .sort(
+              (a, b) =>
+                a.rewardItems?.[0].itemHash - b.rewardItems?.[0].itemHash
+            )
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}
