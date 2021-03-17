@@ -3,7 +3,7 @@ import clsx from "clsx";
 import { floor } from "lodash";
 import React from "react";
 import { DisplayDestinyItemComponent } from "../App";
-import { CLASS_NAMES, ITEM_BUCKET_SLOTS, RACE_NAMES } from "../consts";
+import { CLASS_NAMES, ITEM_BUCKET_SLOTS, RACE_NAMES, SEASONAL_PINNACLE_CAP } from "../consts";
 import { DestinyStores } from "../stores/destiny";
 import { calculateMaxPowerExactByTopItems } from "../utils";
 import { PowerBar } from "./power_bar";
@@ -75,7 +75,9 @@ export function SingleCharacterPanel({
         <div className="flex items-end justify-between align-baseline">
           <div className="space-x-1 font-semibold">
             <span>
-              {currentMaxPower >= 1310 ? currentMaxPower - 1 : currentMaxPower}
+              {currentMaxPower >= SEASONAL_PINNACLE_CAP
+                ? currentMaxPower - 1
+                : currentMaxPower}
             </span>
             <span className="text-sm text-emerald-600">
               +{currentPowerPlus}
@@ -83,10 +85,14 @@ export function SingleCharacterPanel({
           </div>
           <div className="space-x-1 font-semibold">
             <span>
-              {currentMaxPower >= 1310 ? currentMaxPower : currentMaxPower + 1}
+              {currentMaxPower >= SEASONAL_PINNACLE_CAP
+                ? currentMaxPower
+                : currentMaxPower + 1}
             </span>
             <span className="text-sm text-orange-600">
-              {currentMaxPower >= 1310 ? `+0` : `-${8 - currentPowerPlus}`}
+              {currentMaxPower >= SEASONAL_PINNACLE_CAP
+                ? `+0`
+                : `-${8 - currentPowerPlus}`}
             </span>
           </div>
         </div>
@@ -101,7 +107,7 @@ export function SingleCharacterPanel({
           <div className="flex flex-col w-full space-y-2">
             {topItemBySlot?.map((item, i) => {
               const itemPower = item.instanceData.primaryStat.value;
-              const isMaxCap = itemPower === 1310;
+              const isMaxCap = itemPower === SEASONAL_PINNACLE_CAP;
               const powerPlus = itemPower - currentMaxPower;
               const isAbove = powerPlus >= 0;
 

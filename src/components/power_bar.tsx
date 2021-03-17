@@ -2,6 +2,7 @@ import { DestinyItemComponent } from "bungie-api-ts/destiny2";
 import clsx from "clsx";
 import React from "react";
 import { DisplayDestinyItemComponent } from "../App";
+import { SEASONAL_PINNACLE_CAP } from "../consts";
 
 export function PowerBar({
   currentMaxPower,
@@ -20,7 +21,7 @@ export function PowerBar({
             key={i}
             className={clsx(
               "flex-1 py-px rounded-xl",
-              currentMaxPower >= 1310
+              currentMaxPower >= SEASONAL_PINNACLE_CAP
                 ? "bg-emerald-600"
                 : {
                     "bg-emerald-600": i < currentPowerPlus,

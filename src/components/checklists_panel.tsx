@@ -1,5 +1,5 @@
 import React from "react";
-import { ALL_PINNACLE_ITEM_HASH, ALL_POWERFUL_ITEM_HASH } from "../consts";
+import { ALL_PINNACLE_ITEM_HASH, ALL_POWERFUL_ITEM_HASH, SEASONAL_HARD_CAP } from "../consts";
 import { DestinyStores } from "../stores/destiny";
 import { calculateMaxPowerExactByTopItems } from "../utils";
 import { ChecklistItem } from "./checklist_item";
@@ -24,7 +24,7 @@ export function ChecklistsPanel({
     topCharactersItem[activeCharId]
   );
 
-  const hardCapReached = currentMaxPowerExact >= 1300;
+  const hardCapReached = currentMaxPowerExact >= SEASONAL_HARD_CAP;
 
   return (
     <div className="p-6">
