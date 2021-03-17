@@ -3,9 +3,15 @@ import {
   DestinyItemQuantity,
   DestinyMilestoneActivityPhase,
   DestinyMilestoneChallengeActivityDefinition,
+  DestinyMilestoneQuestDefinition,
   DestinyPublicMilestone,
 } from "bungie-api-ts/destiny2";
-import { PINNACLE_ITEM_HASH, PINNACLE_ITEM_WEAK_HASH } from "../../consts";
+import {
+  PINNACLE_ITEM_HASH,
+  PINNACLE_ITEM_WEAK_HASH,
+  POWERFUL_TIER_1_ITEM_HASH,
+  POWERFUL_TIER_3_ITEM_HASH,
+} from "../../consts";
 import { ManifestData } from "../bungie";
 
 export const MADE_UP_MILESTONES: DestinyPublicMilestone[] = [];
@@ -44,6 +50,8 @@ export interface DestinyMilestoneDisplay {
   friendlyName: string;
   hasActivities: boolean;
   activities?: DestinyMilestoneChallengeActivityDefinition[];
+  hasQuest: boolean;
+  quests?: DestinyMilestoneQuestDefinition[];
   rewardItems: DestinyItemQuantity[];
   phases?: DestinyMilestoneActivityPhase[];
   completed: number;
@@ -90,6 +98,21 @@ export function getPinnacleAndPowerfulMilestones(
     },
     friendlyName: "PRESAGE_WEEKLY_CHALLENGE",
   };
+  // Fake milestone hash
+  manifest.DestinyMilestoneDefinition[291895719] = {
+    ...prophecy,
+    activities: [],
+    defaultOrder: 9000,
+    displayProperties: {
+      ...prophecy?.displayProperties,
+      description:
+        "Complete a Master Empire Hunt",
+      name: "Master Empire Hunt",
+      icon:
+        "/common/destiny2_content/icons/DestinyMilestoneDefinition_e81c57d2b901fe2570a6c9ab88975ab3.png",
+    },
+    friendlyName: "MASTER_EMPIRE_HUNT_WEEKLY",
+  };
 
   const filtered = Object.keys(milestones).filter((k) => {
     const def = manifest.DestinyMilestoneDefinition[k];
@@ -108,8 +131,9 @@ export function getPinnacleAndPowerfulMilestones(
     if (!mileDefs) continue;
 
     let rewardItems: DestinyItemQuantity[] = [];
-
     const rewards = mileDefs.rewards;
+    const hasQuest = Boolean(mileDefs.quests);
+    const quests = Object.values(mileDefs.quests ?? {});
 
     if (rewards) {
       rewardItems = Object.values(rewards)
@@ -119,6 +143,20 @@ export function getPinnacleAndPowerfulMilestones(
         .flat()
         .map((ent) => ent.items)
         .flat();
+    } else if (hasQuest) {
+      const quest = quests?.[0];
+      if (!quest) continue;
+      const questRewards = quest.questRewards?.items;
+
+      // Deadly Venatics (5 Warthborn Hunt) only gives Tier 3 Powerful
+      if (mile.milestoneHash === 2406589846) {
+        rewardItems.push({
+          itemHash: POWERFUL_TIER_3_ITEM_HASH,
+          quantity: 1,
+        });
+      } else if (questRewards?.length) {
+        rewardItems.push(...questRewards);
+      }
     } else {
       if (mile.milestoneHash === 541780856) {
         // Deep Stone Crypt
@@ -136,10 +174,30 @@ export function getPinnacleAndPowerfulMilestones(
     }
 
     if ([1437935813, 3448738070, 3312774044].includes(mile.milestoneHash)) {
-      // Weekly Vanguard, Gambit, and Crucible
+      // Weekly Vanguard, Gambit, and Crucible match/playlist
       rewardItems = [
         {
           itemHash: PINNACLE_ITEM_WEAK_HASH,
+          quantity: 1,
+        },
+      ];
+    } else if (
+      [2709491520, 4186783783, 2594202463, 3899487295].includes(
+        mile.milestoneHash
+      )
+    ) {
+      // Weekly Vanguard, Gambit, Crucible and Banshee 8 bounties
+      rewardItems = [
+        {
+          itemHash: POWERFUL_TIER_1_ITEM_HASH,
+          quantity: 1,
+        },
+      ];
+    } else if ([2540726600, 1424672028].includes(mile.milestoneHash)) {
+      // Variks and Exo-Stranger Challenge
+      rewardItems = [
+        {
+          itemHash: POWERFUL_TIER_1_ITEM_HASH,
           quantity: 1,
         },
       ];
@@ -172,7 +230,9 @@ export function getPinnacleAndPowerfulMilestones(
       activities: mileDefs.activities,
       rewardItems: rewardItems,
       completed: 0, // This is just placeholder
-      maxCompleted: mile.activities?.[0].phaseHashes?.length ?? 1, // Phases for Raids
+      maxCompleted: mile.activities?.[0]?.phaseHashes?.length ?? 1, // Phases for Raids
+      hasQuest: Boolean(mileDefs.quests),
+      quests: Object.values(mileDefs.quests ?? {}),
       dependsOn,
       hasAccess: false,
     };

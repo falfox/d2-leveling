@@ -16,6 +16,7 @@ import {
   ITEM_SLOT_BUCKETS,
   ITEM_TYPE_ARMOR,
   ITEM_TYPE_WEAPON,
+  SEASONAL_PINNACLE_CAP,
   STORAGE_ACTIVE_CHAR_ID,
   STORAGE_MANIFEST_VERSION_KEY,
   WEAPON_SLOT_BUCKETS,
@@ -117,9 +118,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       });
     } catch (error) {
       actions.setErrorText(error.message);
-      console.warn({
-        error,
-      });
+      console.error(error);
     } finally {
       actions.setFetching(false);
     }
@@ -257,28 +256,44 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               vendorHashes: [],
               vendors: [],
             };
-          }
-          // else if (aa.recommendedLight == (Const.SEASON_PINNACLE_CAP + 20)) {
-          //     // while we're here check for Empire Hunt pinnacle.
-          //     // must be 1280 or don't bother looking (even though the object shows up at lower PLs)
-          //     const vDesc: any = this.destinyCacheService.cache.Activity[aa.activityHash];
-          //     // is this an empire hunt
-          //     if (vDesc?.displayProperties?.name?.startsWith('Empire Hunt')) {
-          //         hasAccessTo1280EmpireHunt = true;
-          //         if (aa.challenges?.length > 0) {
-          //             for (const challenge of aa.challenges) {
-          //                 if (challenge.objective?.objectiveHash == 1980717736) {
-          //                     // if this is here it shouldn't be complete, these disappear when complete
-          //                     if (!challenge.objective.complete) {
-          //                         incomplete1280Hunt = true;
-          //                         break;
-          //                     }
+          } else if (act.recommendedLight === SEASONAL_PINNACLE_CAP + 20) {
+            // Master Empire Hunt shenanigans
 
-          //                 }
-          //             }
-          //         }
-          //     }
-          // }
+            const actDefs =
+              manifest.DestinyActivityDefinition[act.activityHash];
+
+            if (actDefs?.displayProperties?.name?.startsWith("Empire Hunt")) {
+              allMilestones[291895719] = {
+                activities: [],
+                availableQuests: [],
+                milestoneHash: 291895719,
+                order: 9000,
+                vendorHashes: [],
+                vendors: [],
+              };
+              characterMilestone[291895719] = {
+                activities: [act],
+                availableQuests: [],
+                milestoneHash: 291895719,
+                order: 9000,
+                rewards: [
+                  {
+                    rewardCategoryHash: 326786556,
+                    entries: [
+                      {
+                        earned: false,
+                        redeemed: false,
+                        rewardEntryHash: 326786556,
+                      },
+                    ],
+                  },
+                ],
+                values: {},
+                vendorHashes: [],
+                vendors: [],
+              };
+            }
+          }
         }
 
         // const characterQuest = characterProgresses.quests;
@@ -294,6 +309,10 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           let hasAccess = false;
 
           const activeMilestone = characterMilestone[mile.hash];
+
+          if (mile.hash === 291895719) {
+            // activeMilestone.activities =
+          }
 
           if (!activeMilestone) {
             if (mile.hash === 3603098564) {
@@ -338,6 +357,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           } else {
             hasAccess = true;
             const milestoneActivities = activeMilestone?.activities;
+            const milestoneQuests = activeMilestone?.availableQuests;
 
             if (milestoneActivities?.length) {
               const activity = milestoneActivities?.[0];
@@ -350,6 +370,11 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                 // Presage challenges will missing if completed
                 completed = 1;
               }
+            } else if (milestoneQuests?.length) {
+              const quest = milestoneQuests?.[0];
+
+              const status = quest.status;
+              completed = status.completed ? 1 : 0;
             }
           }
 
@@ -477,6 +502,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       });
     } catch (error) {
       actions.setErrorText(error.message);
+      console.error(error);
     } finally {
       actions.setFetching(false);
     }
