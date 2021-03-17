@@ -40,6 +40,9 @@ module.exports = {
         '288': "72rem",
         '192': "48rem",
       },
+      scale: {
+        '-1': '-1'
+      }
     },
   },
   variants: {

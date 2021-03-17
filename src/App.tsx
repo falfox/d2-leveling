@@ -111,7 +111,7 @@ function NewApp() {
                 className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
                 disabled={true}
               >
-                <RefreshOutline className="w-6 h-6 animate-spin" />
+                <RefreshOutline className="w-6 h-6 transform animate-spin -scale-x-1 -scale-y-1" />
                 <span className="font-semibold">Loading Characters...</span>
               </button>
             </div>
@@ -146,9 +146,6 @@ function AppOld() {
   const setActiveCharId = DestinyStores.useStoreActions(
     (actions) => actions.setActiveCharId
   );
-  console.log({
-    is_fetching,
-  });
 
   const [hideCompleted, setHideCompleted] = useState(false);
   const loadingRef = useRef(is_fetching);
@@ -175,6 +172,10 @@ function AppOld() {
   const membership = memberships?.[0];
 
   if (!membership) throw new Error("Missing membership");
+
+  console.log({
+    is_fetching,
+  });
 
   return (
     <div
@@ -212,9 +213,12 @@ function AppOld() {
                   disabled={is_fetching}
                 >
                   <RefreshOutline
-                    className={clsx("w-5 h-5 text-white", {
-                      "animate-spin": is_fetching,
-                    })}
+                    className={clsx(
+                      "w-5 h-5 text-white transform -scale-x-1 -scale-y-1",
+                      {
+                        "animate-spin": is_fetching,
+                      }
+                    )}
                   />
                 </button>
               </div>

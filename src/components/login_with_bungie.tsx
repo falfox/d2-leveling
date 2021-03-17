@@ -33,7 +33,7 @@ export function LoginWithBungie() {
             className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
             disabled={true}
           >
-            <RefreshOutline className="w-6 h-6 animate-spin" />
+            <RefreshOutline className="w-6 h-6 transform animate-spin -scale-x-1 -scale-y-1" />
             <span className="font-semibold">Logging in ...</span>
           </button>
         ) : state === "error" ? (
