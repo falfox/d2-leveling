@@ -5,6 +5,7 @@ export default function removeConsolePlugin(): Plugin {
   return {
     name: "remove-console",
     apply: "build",
+    enforce: 'pre',
 
     transform(src, id) {
       if (fileRegex.test(id)) {
@@ -12,7 +13,7 @@ export default function removeConsolePlugin(): Plugin {
 
         return {
           code: src.replace(
-            /console.(log|debug|info|...|count)\([^)]+\);?/,
+            /console.(log|debug|info|...|count)\([^)]+\);?/g,
             ""
           ),
           map: null, // provide source map if available
