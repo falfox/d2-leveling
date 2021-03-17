@@ -8,6 +8,8 @@ export default function removeConsolePlugin(): Plugin {
 
     transform(src, id) {
       if (fileRegex.test(id)) {
+        console.log(`Removing console.* from ${id}`);
+
         return {
           code: src.replace(
             /console.(log|debug|info|...|count)\([^)]+\);?/,
