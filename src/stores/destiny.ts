@@ -363,9 +363,22 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               const activity = milestoneActivities?.[0];
 
               if (activity?.challenges?.length) {
-                const challenge = activity.challenges[0];
+                // Check for Master Empire Hunt objective, if not exists, it's completed
+                if (mile.hash === 291895719) {
+                  let masterCompleted = true;
 
-                completed = challenge.objective.complete ? 1 : 0;
+                  for (const chal of activity.challenges) {
+                    if (chal.objective.objectiveHash === 1980717736) {
+                      masterCompleted = false;
+                      break;
+                    }
+                  }
+                  completed = masterCompleted ? 1 : 0;
+                } else {
+                  const challenge = activity.challenges[0];
+
+                  completed = challenge.objective.complete ? 1 : 0;
+                }
               } else {
                 // Presage challenges will missing if completed
                 completed = 1;
