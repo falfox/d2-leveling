@@ -105,8 +105,7 @@ export function getPinnacleAndPowerfulMilestones(
     defaultOrder: 9000,
     displayProperties: {
       ...prophecy?.displayProperties,
-      description:
-        "Complete a Master Empire Hunt",
+      description: "Complete a Master Empire Hunt",
       name: "Master Empire Hunt",
       icon:
         "/common/destiny2_content/icons/DestinyMilestoneDefinition_e81c57d2b901fe2570a6c9ab88975ab3.png",
@@ -154,6 +153,12 @@ export function getPinnacleAndPowerfulMilestones(
           itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
         });
+      } else if (mile.milestoneHash === 3603098564) {
+        // Clan Rewards 5K EXP
+        rewardItems.push({
+          itemHash: PINNACLE_ITEM_WEAK_HASH,
+          quantity: 1,
+        });
       } else if (questRewards?.length) {
         rewardItems.push(...questRewards);
       }
@@ -162,12 +167,6 @@ export function getPinnacleAndPowerfulMilestones(
         // Deep Stone Crypt
         rewardItems.push({
           itemHash: PINNACLE_ITEM_HASH,
-          quantity: 1,
-        });
-      } else if (mile.milestoneHash === 3603098564) {
-        // Clan Rewards 5K EXP
-        rewardItems.push({
-          itemHash: PINNACLE_ITEM_WEAK_HASH,
           quantity: 1,
         });
       }
