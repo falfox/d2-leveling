@@ -32,23 +32,19 @@ export function ChecklistItem({
       key={milestone.hash}
       data-hash={milestone.hash}
     >
-      {milestone.displayProperties.icon ? (
-        <img
-          className={clsx("w-6 h-6 flex-shrink-0", {
-            "bg-gray-700": !completed,
-            "bg-gray-400": completed,
-          })}
-          src={`https://www.bungie.net${milestone.displayProperties.icon}`}
-          alt={milestone.displayProperties.description}
-        />
-      ) : (
-        <FlagSolid
-          className={clsx("w-6 h-6 flex-shrink-0 text-white p-1", {
-            "bg-gray-700": !completed,
-            "bg-gray-400": completed,
-          })}
-        ></FlagSolid>
-      )}
+      <img
+        className={clsx("w-6 h-6 flex-shrink-0", {
+          "bg-gray-700": !completed,
+          "bg-gray-400": completed,
+        })}
+        src={`https://www.bungie.net${
+          milestone.displayProperties.icon
+            ? milestone.displayProperties.icon
+            : `/common/destiny2_content/icons/7f0839df6072e7e4086d0b67c118e06e.png`
+        }`}
+        alt={milestone.displayProperties.description}
+      />
+
       <div className="flex flex-col w-full space-y-1 truncate">
         <span
           className="w-full truncate"
