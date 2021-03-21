@@ -310,10 +310,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
 
           const activeMilestone = characterMilestone[mile.hash];
 
-          if (mile.hash === 291895719) {
-            // activeMilestone.activities =
-          }
-
           if (!activeMilestone) {
             if (mile.hash === 3603098564) {
               hasAccess = true;
@@ -345,14 +341,19 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                 }
               }
             } else {
-              hasAccess = characterActivities.availableActivities.some(
-                (act) =>
-                  act.canJoin &&
-                  manifest.DestinyMilestoneDefinition[mile.hash]?.activities
-                    ?.map((a) => a.activityHash)
-                    .includes(act.activityHash)
-              );
-              completed = 1;
+              if (mile.hasActivities) {
+                hasAccess = characterActivities.availableActivities.some(
+                  (act) =>
+                    act.canJoin &&
+                    manifest.DestinyMilestoneDefinition[mile.hash]?.activities
+                      ?.map((a) => a.activityHash)
+                      .includes(act.activityHash)
+                );
+                completed = 1;
+              } else if (mile.hasQuest) {
+                hasAccess = true;
+                completed = 1;
+              }
             }
           } else {
             hasAccess = true;

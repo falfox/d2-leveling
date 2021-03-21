@@ -49,7 +49,7 @@ export function ChecklistItem({
         <span
           className="w-full truncate"
           title={
-            milestone.friendlyName ?? milestone.displayProperties.description
+            milestone.displayProperties.description ?? milestone.friendlyName
           }
         >
           {CUSTOM_MILESTONES_PROPERTIES[milestone.friendlyName]?.name ??
