@@ -380,7 +380,7 @@ function AppOld() {
           <span className="inline-flex items-center">
             Made by{" "}
             <a
-              href="http://discordapp.com/users/210939885002031105"
+              href="https://discordapp.com/users/210939885002031105"
               className="inline-flex items-center px-2 space-x-1 font-semibold"
               target="_blank"
             >
