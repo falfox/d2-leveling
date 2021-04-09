@@ -10,7 +10,7 @@ export function LoginWithBungie() {
   const login = AuthStore.useStoreActions((actions) => actions.loginWithBungie);
   const state = AuthStore.useStoreState((state) => state.state);
   return (
-    <div className="flex flex-col items-center w-full space-y-8 overflow-hidden">
+    <div className="flex flex-col items-center w-full space-y-8">
       <div className="flex flex-col items-center w-full space-y-3">
         {state === "uninitialize" ? (
           <>

@@ -39,10 +39,6 @@ function App() {
   const state = AuthStore.useStoreState((state) => state.state);
   const setState = AuthStore.useStoreActions((actions) => actions.setState);
 
-  console.log({
-    state,
-  });
-
   useEffect(() => {
     const qs = parse(window.location.search);
     if (qs.code && state === "uninitialize") {
@@ -67,8 +63,8 @@ function App() {
         }}
       >
         <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
-        <div className="relative z-10">
-          <LoginWithBungie />;
+        <div className="relative z-10 overflow-hidden">
+          <LoginWithBungie />
         </div>
         <MadeBy />
       </div>
@@ -107,7 +103,7 @@ function NewApp() {
               </h2>
             </>
           ) : (
-            <div className="relative z-10">
+            <div className="relative z-10 overflow-hidden">
               <button
                 type="button"
                 className="flex items-center px-4 py-3 space-x-3 bg-white rounded-md shadow-md"
@@ -175,10 +171,6 @@ function AppOld() {
   const membership = memberships?.[0];
 
   if (!membership) throw new Error("Missing membership");
-
-  console.log({
-    is_fetching,
-  });
 
   return (
     <div
