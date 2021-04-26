@@ -5,6 +5,7 @@ import {
   ViewBoardsOutline,
   ViewBoardsSolid,
 } from "@graywolfai/react-heroicons";
+import { useMediaQuery } from "@react-hook/media-query";
 import {
   DestinyInventoryItemDefinition,
   DestinyItemComponent,
@@ -28,6 +29,16 @@ import { DestinyStores } from "./stores/destiny";
 const rightPanelVariants = {
   hidden: { opacity: 0, width: 0, display: "hidden" },
   visible: { opacity: 1, width: "100%", display: "block" },
+};
+
+const leftPanelVariantsMobile = {
+  hidden: { opacity: 1 },
+  visible: { opacity: 1 },
+};
+
+const rightPanelVariantsMobile = {
+  hidden: { opacity: 0, x: "100%" },
+  visible: { opacity: 1, x: "0%" },
 };
 
 export interface DisplayDestinyItemComponent extends DestinyItemComponent {
@@ -56,7 +67,7 @@ function App() {
   if (state !== "logged_in")
     return (
       <div
-        className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
+        className="relative flex items-center justify-center w-full min-h-screen space-x-2 overflow-y-hidden text-gray-900"
         style={{
           backgroundImage:
             "url(https://www.bungie.net/7/ca/destiny/bgs/season13/pass_overview_bg_desktop.jpg)",
@@ -116,18 +127,14 @@ function NewApp() {
           )}
         </div>
       ) : (
-        <AppOld />
+        <MainApp />
       )}
       <MadeBy />
     </div>
   );
 }
 
-function AppOld() {
-  const [rightPanelAnimate, toggleRightPanel] = useState<
-    keyof typeof rightPanelVariants
-  >("visible");
-
+function MainApp() {
   const [panelView, setPanelView] = useState<"single" | "multi">("single");
   const {
     characters,
@@ -145,6 +152,13 @@ function AppOld() {
   const setActiveCharId = DestinyStores.useStoreActions(
     (actions) => actions.setActiveCharId
   );
+
+  const isMobileMediaQuery = useMediaQuery("(max-width: 768px)");
+  console.log({ isMobileMediaQuery });
+
+  const [rightPanelAnimate, toggleRightPanel] = useState<
+    keyof typeof rightPanelVariants
+  >(() => (isMobileMediaQuery ? "hidden" : "visible"));
 
   const [hideCompleted, setHideCompleted] = useState(false);
   const loadingRef = useRef(is_fetching);
@@ -182,7 +196,7 @@ function AppOld() {
     >
       <div className="flex flex-col w-full">
         <div className="flex items-center justify-center">
-          <div className="relative w-192">
+          <div className="relative w-full max-w-sm md:max-w-3xl">
             <MembershipBadge />
             <div className="absolute top-0 right-0 -mt-12">
               <div className="flex items-center justify-end w-full py-4 pr-4 space-x-4">
@@ -193,9 +207,9 @@ function AppOld() {
                   }}
                 >
                   {panelView === "multi" ? (
-                    <ViewBoardsSolid className={"w-5 h-5 text-white"} />
+                    <ViewBoardsSolid className="w-5 h-5 text-white" />
                   ) : (
-                    <ViewBoardsOutline className={"w-5 h-5 text-white"} />
+                    <ViewBoardsOutline className="w-5 h-5 text-white" />
                   )}
                 </button>
                 <button
@@ -238,7 +252,11 @@ function AppOld() {
                       initial="hidden"
                       animate={["hidden", "visible"]}
                       exit="hidden"
-                      variants={rightPanelVariants}
+                      variants={
+                        isMobileMediaQuery
+                          ? leftPanelVariantsMobile
+                          : rightPanelVariants
+                      }
                       transition={{
                         ease: "easeIn",
                       }}
@@ -271,7 +289,7 @@ function AppOld() {
                     exit={{
                       opacity: 0,
                     }}
-                    className="absolute top-0 left-0 px-1 -ml-40 space-y-3"
+                    className="absolute top-0 left-0 hidden px-1 -ml-40 space-y-3 md:block"
                   >
                     {characters &&
                       Object.values(characters).map((char) => {
@@ -331,9 +349,9 @@ function AppOld() {
                       >
                         <div className="p-2 bg-white border border-gray-200 rounded-full shadow-xl">
                           {rightPanelAnimate === "hidden" ? (
-                            <ChevronDoubleRightSolid className="w-5 h-5" />
+                            <ChevronDoubleRightSolid className="w-5 h-5 transform -scale-x-1 sm:scale-x-100" />
                           ) : (
-                            <ChevronDoubleLeftSolid className="w-5 h-5" />
+                            <ChevronDoubleLeftSolid className="w-5 h-5 transform -scale-x-1 sm:scale-x-100" />
                           )}
                         </div>
                       </button>
@@ -353,12 +371,19 @@ function AppOld() {
                   initial="hidden"
                   // animate={rightPanelAnimate}
                   animate={["hidden", "visible"]}
-                  variants={rightPanelVariants}
+                  variants={
+                    isMobileMediaQuery
+                      ? rightPanelVariantsMobile
+                      : rightPanelVariants
+                  }
                   transition={{
                     ease: "easeInOut",
                   }}
                   exit="hidden"
-                  className="max-w-sm overflow-y-auto bg-white shadow rounded-r-xl"
+                  className="absolute max-w-sm overflow-y-auto bg-white shadow md:rounded-r-xl md:rounded-none rounded-xl md:static"
+                  style={{
+                    height: "620px",
+                  }}
                 >
                   <ChecklistsPanel
                     hideCompleted={hideCompleted}

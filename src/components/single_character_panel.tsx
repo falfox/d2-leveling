@@ -1,11 +1,18 @@
+import { ChevronDownSolid } from "@graywolfai/react-heroicons";
 import { DestinyCharacterComponent } from "bungie-api-ts/destiny2";
 import clsx from "clsx";
 import { floor } from "lodash";
 import React from "react";
 import { DisplayDestinyItemComponent } from "../App";
-import { CLASS_NAMES, ITEM_BUCKET_SLOTS, RACE_NAMES, SEASONAL_PINNACLE_CAP } from "../consts";
+import {
+  CLASS_NAMES,
+  ITEM_BUCKET_SLOTS,
+  RACE_NAMES,
+  SEASONAL_PINNACLE_CAP
+} from "../consts";
 import { DestinyStores } from "../stores/destiny";
 import { calculateMaxPowerExactByTopItems } from "../utils";
+import { CharacterChooserPopover } from "./character_chooser_popover";
 import { PowerBar } from "./power_bar";
 
 export function SingleCharacterPanel({
@@ -28,37 +35,42 @@ export function SingleCharacterPanel({
   return (
     <>
       <div className="flex justify-between">
-        <div className="flex flex-col space-y-1 text-left">
+        <div className="relative flex flex-col space-y-1 text-left">
           <span className="text-sm font-semibold leading-4 uppercase">
             {RACE_NAMES[character.raceType]}
           </span>
-          <button className="flex items-center space-x-2">
-            <span className="text-3xl font-bold tracking-tighter capitalize">
-              {CLASS_NAMES[character.classType]}
-            </span>
-            {is_fetching && (
-              <svg
-                className="w-5 h-5 mr-3 -ml-1 text-gray-900 animate-spin"
-                xmlns="http://www.w3.org/2000/svg"
-                fill="none"
-                viewBox="0 0 24 24"
-              >
-                <circle
-                  className="opacity-25"
-                  cx={12}
-                  cy={12}
-                  r={10}
-                  stroke="currentColor"
-                  strokeWidth={4}
-                />
-                <path
-                  className="opacity-75"
-                  fill="currentColor"
-                  d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
-                />
-              </svg>
-            )}
-          </button>
+          <CharacterChooserPopover
+            header={
+              <div className="flex items-center space-x-2">
+                <span className="text-3xl font-bold tracking-tighter capitalize">
+                  {CLASS_NAMES[character.classType]}
+                </span>
+                <ChevronDownSolid className="w-5 h-5 fill-current md:hidden" />
+                {is_fetching && (
+                  <svg
+                    className="w-5 h-5 mr-3 -ml-1 text-gray-900 animate-spin"
+                    xmlns="http://www.w3.org/2000/svg"
+                    fill="none"
+                    viewBox="0 0 24 24"
+                  >
+                    <circle
+                      className="opacity-25"
+                      cx={12}
+                      cy={12}
+                      r={10}
+                      stroke="currentColor"
+                      strokeWidth={4}
+                    />
+                    <path
+                      className="opacity-75"
+                      fill="currentColor"
+                      d="M4 12a8 8 0 018-8V0C5.373 0 0 5.373 0 12h4zm2 5.291A7.962 7.962 0 014 12H0c0 3.042 1.135 5.824 3 7.938l3-2.647z"
+                    />
+                  </svg>
+                )}
+              </div>
+            }
+          />
         </div>
         <div className="flex flex-col space-y-1 text-right">
           <span className="text-sm font-semibold leading-4">
