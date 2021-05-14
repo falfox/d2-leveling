@@ -93,8 +93,7 @@ export function getPinnacleAndPowerfulMilestones(
       description:
         "Search the Glykon to earn Dead Man's Tale, and get yourself a Pinnacle drop while you're there",
       name: "Weekly Presage Challenge",
-      icon:
-        "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
+      icon: "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
     },
     friendlyName: "PRESAGE_WEEKLY_CHALLENGE",
   };
@@ -107,8 +106,7 @@ export function getPinnacleAndPowerfulMilestones(
       ...prophecy?.displayProperties,
       description: "Complete a Master Empire Hunt",
       name: "Master Empire Hunt",
-      icon:
-        "/common/destiny2_content/icons/DestinyMilestoneDefinition_e81c57d2b901fe2570a6c9ab88975ab3.png",
+      icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_e81c57d2b901fe2570a6c9ab88975ab3.png",
     },
     friendlyName: "MASTER_EMPIRE_HUNT_WEEKLY",
   };
@@ -155,6 +153,12 @@ export function getPinnacleAndPowerfulMilestones(
         });
       } else if (mile.milestoneHash === 3603098564) {
         // Clan Rewards 5K EXP
+        rewardItems.push({
+          itemHash: PINNACLE_ITEM_WEAK_HASH,
+          quantity: 1,
+        });
+      } else if (mile.milestoneHash === 3341030123) {
+        // Rewire The Light (Open 3 Conflux Chests with Key Codes in Override)
         rewardItems.push({
           itemHash: PINNACLE_ITEM_WEAK_HASH,
           quantity: 1,
