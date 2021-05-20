@@ -212,7 +212,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           vendors: [],
         };
 
-        // Inject Net Crasher (Override Mission Completion) to PublicMilestones
+        // Inject Net Crasher (3x Override Mission Completion) to PublicMilestones
         allMilestones[966446952] = {
           activities:
             manifest.DestinyMilestoneDefinition[966446952]?.activities.map(

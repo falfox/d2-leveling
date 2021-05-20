@@ -166,6 +166,12 @@ export function getPinnacleAndPowerfulMilestones(
           itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
         });
+      } else if (mile.milestoneHash === 1684722553) {
+        // Digital Trove (3x Override)
+        rewardItems.push({
+          itemHash: PINNACLE_ITEM_WEAK_HASH,
+          quantity: 1,
+        });
       } else if (mile.milestoneHash === 3632712541) {
         // Battle Hardened
         rewardItems.push({
