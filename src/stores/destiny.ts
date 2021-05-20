@@ -212,6 +212,47 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           vendors: [],
         };
 
+        // Inject Net Crasher (Override Mission Completion) to PublicMilestones
+        allMilestones[966446952] = {
+          activities:
+            manifest.DestinyMilestoneDefinition[966446952]?.activities.map(
+              (a) => ({
+                ...a,
+                booleanActivityOptions: {},
+                challengeObjectiveHashes: [],
+                modifierHashes: [],
+                phaseHashes: [],
+              })
+            ) ?? [],
+          availableQuests: [],
+          milestoneHash: 966446952,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Inject Digital Trove (3x Override Mission Chest) to PublicMilestones
+        allMilestones[1684722553] = {
+          activities:
+            manifest.DestinyMilestoneDefinition[1684722553]?.activities.map(
+              (a) => ({
+                ...a,
+                booleanActivityOptions: {},
+                challengeObjectiveHashes: [],
+                modifierHashes: [],
+                phaseHashes: [],
+              })
+            ) ?? [],
+          availableQuests: [],
+          milestoneHash: 1684722553,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+        console.log({
+          trove: manifest.DestinyMilestoneDefinition[1684722553],
+        });
+
         for (const act of characterActivities.availableActivities) {
           if (act.activityHash == 4212753278) {
             // presage master

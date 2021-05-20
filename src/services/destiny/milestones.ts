@@ -42,6 +42,9 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
   MILESTONE_WEEKLY_BATTLEGROUNDS_THIRD: {
     name: "Weekly Battlegrounds Playlist (9)",
   },
+  MILESTONE_WEEKLY_OVERRIDE_CHESTS: {
+    name: "Digital Trove (Open 3 Conflux Chests)"
+  }
 };
 
 export interface DestinyMilestoneDisplay {
@@ -158,9 +161,15 @@ export function getPinnacleAndPowerfulMilestones(
           quantity: 1,
         });
       } else if (mile.milestoneHash === 3341030123) {
-        // Rewire The Light (Open 3 Conflux Chests with Key Codes in Override)
+        // Rewire The Light (8 Bounties) 
         rewardItems.push({
-          itemHash: PINNACLE_ITEM_WEAK_HASH,
+          itemHash: POWERFUL_TIER_3_ITEM_HASH,
+          quantity: 1,
+        });
+      } else if (mile.milestoneHash === 3632712541) {
+        // Battle Hardened
+        rewardItems.push({
+          itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
         });
       } else if (questRewards?.length) {
@@ -170,7 +179,7 @@ export function getPinnacleAndPowerfulMilestones(
       if (mile.milestoneHash === 541780856) {
         // Deep Stone Crypt
         rewardItems.push({
-          itemHash: PINNACLE_ITEM_HASH,
+          itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
         });
       }
@@ -217,12 +226,6 @@ export function getPinnacleAndPowerfulMilestones(
       dependsOn.push("3628293757", "3628293755");
     } else if (hash == "3632712541") {
       // Battlegrounds Playlist 3
-    } else if (hash == "2953722265") {
-      // Battlegrounds Playlist 6
-      dependsOn.push("3632712541");
-    } else if (hash == "3031052508") {
-      // Battlegrounds Playlist 9;
-      dependsOn.push("3632712541", "2953722265");
     }
 
     const milestoneDisplay: DestinyMilestoneDisplay = {
