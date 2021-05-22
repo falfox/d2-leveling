@@ -523,8 +523,14 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           (bucketHash) =>
             maxBy(
               equipableItem.filter((i) => {
+                if (i?.itemDefinition?.classType === 3) {
+                  return (
+                    i?.itemDefinition?.inventory?.bucketTypeHash === bucketHash
+                  );
+                }
                 return (
-                  i?.itemDefinition?.inventory?.bucketTypeHash === bucketHash
+                  i?.itemDefinition?.inventory?.bucketTypeHash === bucketHash &&
+                  i?.itemDefinition?.classType === characters[cur].classType
                 );
               }),
               (i) => itemInstances[i.itemInstanceId!].primaryStat.value
