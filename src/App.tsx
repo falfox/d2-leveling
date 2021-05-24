@@ -335,7 +335,8 @@ function MainApp() {
                       exit={{
                         opacity: 0,
                       }}
-                      className="absolute top-0 right-0 z-20 mt-4 -mr-5"
+                      // TODO: Fix z-Index issue
+                      className="absolute top-0 right-0 z-40 mt-4 -mr-5"
                     >
                       <button
                         className="focus:outline-none"
@@ -380,7 +381,7 @@ function MainApp() {
                     ease: "easeInOut",
                   }}
                   exit="hidden"
-                  className="absolute max-w-sm overflow-y-auto bg-white shadow md:rounded-r-xl md:rounded-none rounded-xl md:static"
+                  className="absolute z-10 max-w-sm overflow-y-auto bg-white shadow md:rounded-r-xl md:rounded-none rounded-xl md:static"
                   style={{
                     height: "620px",
                   }}
