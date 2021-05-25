@@ -48,8 +48,11 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
       {
         itemHash: PINNACLE_ITEM_WEAK_HASH,
         quantity: 1,
-      }
-    ]
+      },
+    ],
+  },
+  MILESTONE_WEEKLY_VAULT_OF_GLASS: {
+    name: "Vault of Glass",
   },
 };
 
