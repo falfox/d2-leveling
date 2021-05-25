@@ -21,7 +21,9 @@ export function ChecklistItem({
   hardCapReached: boolean;
 }) {
   const completed = milestone.completed;
-  const rewardItem = milestone.rewardItems?.[0].itemHash;
+  const rewardItem =
+    CUSTOM_MILESTONES_PROPERTIES[milestone.friendlyName]?.rewards?.[0]
+      ?.itemHash ?? milestone.rewardItems?.[0].itemHash;
 
   return (
     <li

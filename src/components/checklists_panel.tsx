@@ -1,5 +1,10 @@
 import React from "react";
-import { ALL_PINNACLE_ITEM_HASH, ALL_POWERFUL_ITEM_HASH, SEASONAL_HARD_CAP } from "../consts";
+import {
+  ALL_PINNACLE_ITEM_HASH,
+  ALL_POWERFUL_ITEM_HASH,
+  SEASONAL_HARD_CAP,
+} from "../consts";
+import { CUSTOM_MILESTONES_PROPERTIES } from "../services/destiny/milestones";
 import { DestinyStores } from "../stores/destiny";
 import { calculateMaxPowerExactByTopItems } from "../utils";
 import { ChecklistItem } from "./checklist_item";
@@ -11,11 +16,8 @@ export function ChecklistsPanel({
   hideCompleted: boolean;
   handleHideToggle: (checke: boolean) => void;
 }) {
-  const {
-    milestones,
-    activeCharId,
-    topCharactersItem,
-  } = DestinyStores.useStoreState((state) => state);
+  const { milestones, activeCharId, topCharactersItem } =
+    DestinyStores.useStoreState((state) => state);
 
   if (!milestones || !activeCharId || !topCharactersItem)
     throw new Error("Missing milestones or activeCharId or topCharactersItem");
@@ -56,10 +58,15 @@ export function ChecklistsPanel({
                 )
               );
             })
-            .sort(
-              (a, b) =>
-                a.rewardItems?.[0].itemHash - b.rewardItems?.[0].itemHash
-            )
+            .sort((a, b) => {
+              const rewardA =
+                CUSTOM_MILESTONES_PROPERTIES[a.friendlyName]?.rewards?.[0]
+                  ?.itemHash ?? a.rewardItems?.[0].itemHash;
+              const rewardB =
+                CUSTOM_MILESTONES_PROPERTIES[b.friendlyName]?.rewards?.[0]
+                  ?.itemHash ?? b.rewardItems?.[0].itemHash;
+              return rewardA - rewardB;
+            })
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}
@@ -84,10 +91,15 @@ export function ChecklistsPanel({
                 )
               );
             })
-            .sort(
-              (a, b) =>
-                a.rewardItems?.[0].itemHash - b.rewardItems?.[0].itemHash
-            )
+            .sort((a, b) => {
+              const rewardA =
+                CUSTOM_MILESTONES_PROPERTIES[a.friendlyName]?.rewards?.[0]
+                  ?.itemHash ?? a.rewardItems?.[0].itemHash;
+              const rewardB =
+                CUSTOM_MILESTONES_PROPERTIES[b.friendlyName]?.rewards?.[0]
+                  ?.itemHash ?? b.rewardItems?.[0].itemHash;
+              return rewardA - rewardB;
+            })
             .map((mile) => (
               <ChecklistItem
                 milestone={mile}

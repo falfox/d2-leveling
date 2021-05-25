@@ -21,7 +21,7 @@ export const ALL_AVAILABLE_CHALLENGES = [];
 export const CUSTOM_MILESTONES_PROPERTIES: {
   [key: string]: {
     name?: string;
-    rewards?: string[];
+    rewards?: DestinyItemQuantity[];
   };
 } = {
   MILESTONE_WEEKLY_PROPHECY_DUNGEON_PINNACLE: {
@@ -43,8 +43,14 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
     name: "Weekly Battlegrounds Playlist (9)",
   },
   MILESTONE_WEEKLY_OVERRIDE_CHESTS: {
-    name: "Digital Trove (Open 3 Conflux Chests)"
-  }
+    name: "Digital Trove (Open 3 Conflux Chests)",
+    rewards: [
+      {
+        itemHash: PINNACLE_ITEM_WEAK_HASH,
+        quantity: 1,
+      }
+    ]
+  },
 };
 
 export interface DestinyMilestoneDisplay {
@@ -161,17 +167,19 @@ export function getPinnacleAndPowerfulMilestones(
           quantity: 1,
         });
       } else if (mile.milestoneHash === 3341030123) {
-        // Rewire The Light (8 Bounties) 
+        // Rewire The Light (8 Bounties)
         rewardItems.push({
           itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
         });
       } else if (mile.milestoneHash === 1684722553) {
         // Digital Trove (3x Override)
-        rewardItems.push({
-          itemHash: PINNACLE_ITEM_WEAK_HASH,
-          quantity: 1,
-        });
+        rewardItems = [
+          {
+            itemHash: PINNACLE_ITEM_WEAK_HASH,
+            quantity: 1,
+          },
+        ];
       } else if (mile.milestoneHash === 3632712541) {
         // Battle Hardened
         rewardItems.push({
