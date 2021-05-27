@@ -471,14 +471,15 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         inventoryData,
         (inv) => inv.items
       );
+      const accountInventories = [
+        ...Object.values(allCharactersInventories).flat(),
+        ...Object.values(equipmentData).map(d => d.items).flat(),
+      ];
 
       const topItemsByChar = Object.keys(equipmentData).reduce((acc, cur) => {
-        const characterEquipment = equipmentData[cur].items;
-
         const inventories = [
-          ...Object.values(allCharactersInventories).flat(),
+          ...accountInventories,
           ...profileInventories.items,
-          ...characterEquipment,
         ].flat();
 
         const equipableItem = inventories
@@ -536,6 +537,10 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               (i) => itemInstances[i.itemInstanceId!].primaryStat.value
             )!
         );
+
+        console.log({
+          topItems,
+        });
 
         return {
           ...acc,
