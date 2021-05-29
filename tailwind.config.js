@@ -1,6 +1,7 @@
 const colors = require("tailwindcss/colors");
 
 module.exports = {
+  mode: "jit",
   purge: ["./index.html", "./src/**/*.{js,ts,jsx,tsx}"],
   darkMode: false, // or 'media' or 'class'
   theme: {
@@ -37,12 +38,12 @@ module.exports = {
         ],
       },
       width: {
-        '288': "72rem",
-        '192': "48rem",
+        288: "72rem",
+        192: "48rem",
       },
       scale: {
-        '-1': '-1'
-      }
+        "-1": "-1",
+      },
     },
   },
   variants: {
