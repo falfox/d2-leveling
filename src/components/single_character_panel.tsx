@@ -123,6 +123,8 @@ export function SingleCharacterPanel({
               const powerPlus = itemPower - currentMaxPower;
               const isAbove = powerPlus >= 0;
 
+              const itemImage = "https://www.bungie.net/" +
+                item.itemDefinition.displayProperties.icon;
               return (
                 <div
                   className={clsx("flex items-center group", {
@@ -131,14 +133,13 @@ export function SingleCharacterPanel({
                     "text-gray-900": !isMaxCap && isAbove,
                     "text-orange-600": !isMaxCap && !isAbove,
                   })}
-                  key={i}
+                  key={item.itemHash}
                 >
                   <img
                     src={
-                      "https://www.bungie.net/" +
-                      item.itemDefinition.displayProperties.icon
+                      itemImage
                     }
-                    alt=""
+                    alt={item.itemDefinition.displayProperties.name}
                     className="flex-shrink-0 w-12 h-12 bg-gray-600 rounded-md"
                   />
                   <div className="flex items-center flex-1 h-12 px-2 mx-1 overflow-auto font-semibold rounded hover:bg-gray-200">
