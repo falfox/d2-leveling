@@ -128,8 +128,8 @@ export function getPinnacleAndPowerfulMilestones(
     return (
       def &&
       // def.milestoneType === DestinyMilestoneType.Weekly &&
-      !["534869653", "4253138191"].includes(k)
-      // Skip XuR and Clan Objectives for now
+      !["534869653", "4253138191", "291895719"].includes(k)
+      // Skip XuR, Clan Objectives and Master Class (Guardian Games) for now
     );
   });
 
