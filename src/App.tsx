@@ -70,7 +70,7 @@ function App() {
         className="relative flex items-center justify-center w-full min-h-screen space-x-2 overflow-y-hidden text-gray-900"
         style={{
           backgroundImage:
-            "url(https://www.bungie.net/7/ca/destiny/bgs/season14/s14_story_endless_night_bg_desktop.jpg)",
+            "url(https://www.bungie.net/pubassets/pkgs/152/152494/s15_media_screenshot_2.jpg)",
         }}
       >
         <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
@@ -103,7 +103,7 @@ function NewApp() {
           className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
           style={{
             backgroundImage:
-              "url(https://www.bungie.net/7/ca/destiny/bgs/season14/s14_story_endless_night_bg_desktop.jpg)",
+              "url(https://www.bungie.net/pubassets/pkgs/152/152494/s15_media_screenshot_2.jpg)",
           }}
         >
           <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
@@ -191,7 +191,7 @@ function MainApp() {
       className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
       style={{
         backgroundImage:
-          "url(https://www.bungie.net/7/ca/destiny/bgs/season14/s14_story_endless_night_bg_desktop.jpg)",
+          "url(https://www.bungie.net/pubassets/pkgs/152/152494/s15_media_screenshot_2.jpg)",
       }}
     >
       <div className="flex flex-col w-full">
