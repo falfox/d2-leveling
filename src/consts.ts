@@ -73,9 +73,9 @@ export const ALL_POWERFUL_ITEM_HASH = [
   POWERFUL_LEGACY_GEAR_ITEM_HASH,
 ];
 
-export const SEASONAL_SOFT_CAP = 1260;
-export const SEASONAL_HARD_CAP = 1310;
-export const SEASONAL_PINNACLE_CAP = 1320;
+export const SEASONAL_SOFT_CAP = 1270;
+export const SEASONAL_HARD_CAP = 1320;
+export const SEASONAL_PINNACLE_CAP = 1330;
 
 export const CLASS_TITAN = "titan";
 export const CLASS_HUNTER = "hunter";
