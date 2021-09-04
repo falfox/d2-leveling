@@ -67,7 +67,7 @@ function App() {
   if (state !== "logged_in")
     return (
       <div
-        className="relative flex items-center justify-center w-full min-h-screen space-x-2 overflow-y-hidden text-gray-900"
+        className="relative flex items-center justify-center w-full min-h-screen space-x-2 overflow-y-hidden text-gray-900 bg-cover"
         style={{
           backgroundImage:
             "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
@@ -100,7 +100,7 @@ function NewApp() {
     <div className="relative antialiased">
       {!hasData ? (
         <div
-          className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
+          className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900 bg-cover"
           style={{
             backgroundImage:
               "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
@@ -188,13 +188,14 @@ function MainApp() {
 
   return (
     <div
-      className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900"
+      className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900 bg-cover"
       style={{
         backgroundImage:
           "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
       }}
     >
-      <div className="flex flex-col w-full">
+      <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
+      <div className="relative flex flex-col w-full">
         <div className="flex items-center justify-center">
           <div className="relative w-full max-w-sm md:max-w-3xl">
             <MembershipBadge />
@@ -262,7 +263,7 @@ function MainApp() {
                       }}
                       className="max-w-sm overflow-y-auto bg-white shadow first:rounded-l-xl last:rounded-r-xl"
                     >
-                      <div className="relative p-6">
+                      <div className="p-6 bg-white">
                         <SingleCharacterPanel
                           character={characters?.[char]}
                           topItemBySlot={topCharactersItem[char]}
