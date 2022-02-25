@@ -55,6 +55,12 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
   MILESTONE_WEEKLY_VAULT_OF_GLASS: {
     name: "Vault of Glass",
   },
+  MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PARTICIPATION: {
+    name: "Complete the weekly campaign mission on any difficulty",
+  },
+  MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PINNACLE: {
+    name: "Get a team score of 100,000 or better. on Weekly Campaign",
+  },
 };
 
 export interface DestinyMilestoneDisplay {
@@ -85,43 +91,30 @@ export function getPinnacleAndPowerfulMilestones(
 
   if (!dares) throw new Error("Failed to retrieve prophecy definition");
 
-  // Borrows defs from Prophecy
-  manifest.DestinyMilestoneDefinition[3278614711] = {
-    ...dares,
-    activities: [
-      {
-        activityHash: 4212753278,
-        challenges: [
-          {
-            challengeObjectiveHash: 3278614711,
-          },
-        ],
-        activityGraphNodes: [],
-        phases: [],
-      },
-    ],
-    defaultOrder: 9000,
-    displayProperties: {
-      ...dares?.displayProperties,
-      description:
-        "Search the Glykon to earn Dead Man's Tale, and get yourself a Pinnacle drop while you're there",
-      name: "Weekly Presage Challenge",
-      icon: "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
-    },
-    friendlyName: "PRESAGE_WEEKLY_CHALLENGE",
-  };
-  // Fake milestone hash
-  manifest.DestinyMilestoneDefinition[291895719] = {
+  // Fake milestone hash for WQ Campaign
+  manifest.DestinyMilestoneDefinition[363309766] = {
     ...dares,
     activities: [],
     defaultOrder: 9000,
     displayProperties: {
       ...dares?.displayProperties,
-      description: "Complete a Master Empire Hunt",
-      name: "Master Empire Hunt",
-      icon: "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
+      description: "Get a team score of 100,000 or better.",
+      name: "Weekly Campaign Mission",
+      icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_3ba6365522a77a0dcec534d71ce9de89.png",
     },
-    friendlyName: "MASTER_EMPIRE_HUNT_WEEKLY",
+    friendlyName: "MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PINNACLE",
+  };
+  manifest.DestinyMilestoneDefinition[2595878741] = {
+    ...dares,
+    activities: [],
+    defaultOrder: 9000,
+    displayProperties: {
+      ...dares?.displayProperties,
+      description: "Complete the weekly campaign mission on any difficulty",
+      name: "Weekly Campaign Mission",
+      icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_3ba6365522a77a0dcec534d71ce9de89.png",
+    },
+    friendlyName: "MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PARTICIPATION",
   };
 
   const filtered = Object.keys(milestones).filter((k) => {
@@ -178,8 +171,13 @@ export function getPinnacleAndPowerfulMilestones(
         });
       }
     }
-
-    if ([1437935813, 3448738070, 3312774044].includes(mile.milestoneHash)) {
+    const WEEKLY_WQ_CAMPAIGN = 2595878741;
+    const WEEKLY_WQ_CAMPAIGN_100K = 363309766;
+    if (
+      [1437935813, 3448738070, 3312774044, WEEKLY_WQ_CAMPAIGN_100K].includes(
+        mile.milestoneHash
+      )
+    ) {
       // Weekly Vanguard, Gambit, and Crucible match/playlist
       rewardItems = [
         {
@@ -189,16 +187,20 @@ export function getPinnacleAndPowerfulMilestones(
         },
       ];
     } else if (
-      [2709491520, 4186783783, 2594202463, 3899487295].includes(
-        mile.milestoneHash
-      )
+      [
+        2709491520,
+        4186783783,
+        2594202463,
+        3899487295,
+        WEEKLY_WQ_CAMPAIGN,
+      ].includes(mile.milestoneHash)
     ) {
       // Weekly Vanguard, Gambit, Crucible and Banshee 8 bounties
       rewardItems = [
         {
           itemHash: POWERFUL_TIER_1_ITEM_HASH,
           quantity: 1,
-          hasConditionalVisibility: false,
+          hasConditionalVisibility: true,
         },
       ];
     }

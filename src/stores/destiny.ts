@@ -160,7 +160,23 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         throw new Error("Failed to retrieve manifest data");
       }
 
+      console.log({
+        XXXXXXXXXXXXXXXXXXX: Object.entries(
+          manifest.DestinyMilestoneDefinition
+        ).map(
+          ([key, value]) => `${key} : ${value?.displayProperties.description}`
+        ),
+      });
       const allMilestones = milestonesData.Response;
+      console.log({
+        AAAAAAAAAAAAAAAAAAAAAA: Object.entries(allMilestones).map(
+          ([key, value]) =>
+            `${key} : ${
+              manifest.DestinyMilestoneDefinition[value?.milestoneHash]
+                ?.displayProperties.description
+            }`
+        ),
+      });
 
       const milestones = Object.keys(progressionsData).reduce((acc, cur) => {
         console.log("========================");
@@ -178,52 +194,29 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         });
 
         for (const act of characterActivities.availableActivities) {
-          if (act.activityHash == 4212753278) {
-            // presage master
-
-            console.log({
-              act,
-            });
-
-            allMilestones[3278614711] = {
-              activities: [
-                {
-                  ...act,
-                  challengeObjectiveHashes: [3278614711],
-                  phaseHashes: [],
-                },
-              ],
-              availableQuests: [],
-              milestoneHash: 3278614711,
-              order: 9000,
-              vendorHashes: [],
-              vendors: [],
-            };
-
-            characterMilestone[3278614711] = {
-              activities: [act],
-              availableQuests: [],
-              milestoneHash: 3278614711,
-              order: 9000,
-              rewards: [
-                {
-                  rewardCategoryHash: 326786556,
-                  entries: [
-                    {
-                      earned: false,
-                      redeemed: false,
-                      rewardEntryHash: 326786556,
-                    },
-                  ],
-                },
-              ],
-              values: {},
-              vendorHashes: [],
-              vendors: [],
-            };
-          } else if (act.recommendedLight === SEASONAL_PINNACLE_CAP + 20) {
+          if (act.recommendedLight === SEASONAL_PINNACLE_CAP + 20) {
           }
         }
+
+        // Complete Weekly WQ Campaign
+        allMilestones[2595878741] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 2595878741,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Complete Weekly WQ Campaign with 100k Team Score
+        allMilestones[363309766] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 363309766,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
 
         // const characterQuest = characterProgresses.quests;
         console.log({
