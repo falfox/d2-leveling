@@ -424,10 +424,10 @@ browserslist@^4.14.5, browserslist@^4.16.1:
     escalade "^3.1.1"
     node-releases "^1.1.70"
 
-bungie-api-ts@^4.8.0:
-  version "4.8.0"
-  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.8.0.tgz#a2cce5596d7ecbe28c6270c24b7ec6a7918118b9"
-  integrity sha512-7lap/p30QwfSIsu+n0GwCbHrHwYZEW+WyZoPASfdoQ69jE9eHZV0PjdufUd6th1N5I6s20NqC0H1K9YkESyEkA==
+bungie-api-ts@^4.15.0:
+  version "4.15.0"
+  resolved "https://registry.yarnpkg.com/bungie-api-ts/-/bungie-api-ts-4.15.0.tgz#50e4f70bf503b75b2554768cf2438ab185751b69"
+  integrity sha512-QMFCr4Smfit5Do4FZ+Cl5QsvS0CVbSJJ5vLBB0CtkiY+zSTnzkAzeUMmNEVBmF5uBcGGcTxWja/434huMMBVNA==
 
 bytes@^3.0.0:
   version "3.1.0"

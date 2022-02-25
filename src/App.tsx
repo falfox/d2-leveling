@@ -20,7 +20,7 @@ import { LoginWithBungie } from "./components/login_with_bungie";
 import { MadeBy } from "./components/made_by";
 import { MembershipBadge } from "./components/membership_badge";
 import { SingleCharacterPanel } from "./components/single_character_panel";
-import { CLASS_NAMES } from "./consts";
+import { BACKGROUND_IMAGE, CLASS_NAMES } from "./consts";
 import { useKeyPress } from "./hooks/useKeyPress";
 import { getAccessToken } from "./services/auth";
 import { AuthStore } from "./stores/auth";
@@ -69,8 +69,7 @@ function App() {
       <div
         className="relative flex items-center justify-center w-full min-h-screen space-x-2 overflow-y-hidden text-gray-900 bg-cover"
         style={{
-          backgroundImage:
-            "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
+          backgroundImage: `url(${BACKGROUND_IMAGE})`,
         }}
       >
         <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
@@ -102,8 +101,7 @@ function NewApp() {
         <div
           className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900 bg-cover"
           style={{
-            backgroundImage:
-              "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
+            backgroundImage: `url(${BACKGROUND_IMAGE})`,
           }}
         >
           <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
@@ -190,8 +188,7 @@ function MainApp() {
     <div
       className="relative flex items-center justify-center w-full min-h-screen space-x-2 text-gray-900 bg-cover"
       style={{
-        backgroundImage:
-          "url(https://www.bungie.net/pubassets/pkgs/152/152494/s14_media_wallpaper_3.jpg)",
+        backgroundImage: `url(${BACKGROUND_IMAGE})`,
       }}
     >
       <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>

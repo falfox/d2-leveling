@@ -80,13 +80,13 @@ export function getPinnacleAndPowerfulMilestones(
 ): DestinyMilestoneDisplay[] {
   const reducedMilestones = [];
 
-  const prophecy = manifest.DestinyMilestoneDefinition[825965416];
+  const dares = manifest.DestinyMilestoneDefinition[295129163];
 
-  if (!prophecy) throw new Error("Failed to retrieve prophecy definition");
+  if (!dares) throw new Error("Failed to retrieve prophecy definition");
 
   // Borrows defs from Prophecy
   manifest.DestinyMilestoneDefinition[3278614711] = {
-    ...prophecy,
+    ...dares,
     activities: [
       {
         activityHash: 4212753278,
@@ -101,7 +101,7 @@ export function getPinnacleAndPowerfulMilestones(
     ],
     defaultOrder: 9000,
     displayProperties: {
-      ...prophecy?.displayProperties,
+      ...dares?.displayProperties,
       description:
         "Search the Glykon to earn Dead Man's Tale, and get yourself a Pinnacle drop while you're there",
       name: "Weekly Presage Challenge",
@@ -111,14 +111,14 @@ export function getPinnacleAndPowerfulMilestones(
   };
   // Fake milestone hash
   manifest.DestinyMilestoneDefinition[291895719] = {
-    ...prophecy,
+    ...dares,
     activities: [],
     defaultOrder: 9000,
     displayProperties: {
-      ...prophecy?.displayProperties,
+      ...dares?.displayProperties,
       description: "Complete a Master Empire Hunt",
       name: "Master Empire Hunt",
-      icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_e81c57d2b901fe2570a6c9ab88975ab3.png",
+      icon: "/common/destiny2_content/icons/3e67c5cbdb9f63247765dd7f2fa464e8.png",
     },
     friendlyName: "MASTER_EMPIRE_HUNT_WEEKLY",
   };

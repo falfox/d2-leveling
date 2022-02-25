@@ -13,11 +13,13 @@ import {
   DestinyProfileResponse,
   DestinyProgressionDefinition,
   DestinyPublicMilestone,
+  DestinyVendorResponse,
   getCharacter,
   getDestinyManifest,
   getDestinyManifestSlice,
   getProfile,
   getPublicMilestones,
+  getVendor,
   HttpClientConfig,
   ServerResponse,
 } from "bungie-api-ts/destiny2";
@@ -257,6 +259,23 @@ export async function getCharacterInfo(
   return await getCharacter($http, {
     characterId,
     components: [DestinyComponentType.CharacterInventories],
+    destinyMembershipId: destinyMemberships[0].membershipId,
+    membershipType: destinyMemberships[0].membershipType,
+  });
+}
+
+export async function getVendorInfo(
+  characterId: string
+): Promise<ServerResponse<DestinyVendorResponse>> {
+  const destinyMemberships = await getDestinyMembership();
+
+  return await getVendor($http, {
+    characterId,
+    vendorHash: 350061650,
+    components: [
+      DestinyComponentType.VendorSales,
+      DestinyComponentType.Vendors,
+    ],
     destinyMembershipId: destinyMemberships[0].membershipId,
     membershipType: destinyMemberships[0].membershipType,
   });
