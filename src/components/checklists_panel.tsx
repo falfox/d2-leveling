@@ -51,11 +51,8 @@ export function ChecklistsPanel({
             ?.filter((mile) => {
               if (hideCompleted && mile.completed) return false;
 
-              return (
-                mile.hasAccess &&
-                mile.rewardItems.some((i) =>
-                  ALL_PINNACLE_ITEM_HASH.includes(i.itemHash)
-                )
+              return mile.rewardItems.some((i) =>
+                ALL_PINNACLE_ITEM_HASH.includes(i.itemHash)
               );
             })
             .sort((a, b) => {
@@ -84,11 +81,8 @@ export function ChecklistsPanel({
             ?.filter(function (mile) {
               if (hideCompleted && mile.completed) return false;
 
-              return (
-                mile.hasAccess &&
-                mile.rewardItems.some((i) =>
-                  ALL_POWERFUL_ITEM_HASH.includes(i.itemHash)
-                )
+              return mile.rewardItems.some((i) =>
+                ALL_POWERFUL_ITEM_HASH.includes(i.itemHash)
               );
             })
             .sort((a, b) => {

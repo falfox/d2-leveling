@@ -48,6 +48,7 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
       {
         itemHash: PINNACLE_ITEM_WEAK_HASH,
         quantity: 1,
+        hasConditionalVisibility: false,
       },
     ],
   },
@@ -157,37 +158,12 @@ export function getPinnacleAndPowerfulMilestones(
       if (!quest) continue;
       const questRewards = quest.questRewards?.items;
 
-      // Deadly Venatics (5 Warthborn Hunt) only gives Tier 3 Powerful
-      if (mile.milestoneHash === 2406589846) {
-        rewardItems.push({
-          itemHash: POWERFUL_TIER_3_ITEM_HASH,
-          quantity: 1,
-        });
-      } else if (mile.milestoneHash === 3603098564) {
+      if (mile.milestoneHash === 3603098564) {
         // Clan Rewards 5K EXP
         rewardItems.push({
           itemHash: PINNACLE_ITEM_WEAK_HASH,
           quantity: 1,
-        });
-      } else if (mile.milestoneHash === 3341030123) {
-        // Rewire The Light (8 Bounties)
-        rewardItems.push({
-          itemHash: POWERFUL_TIER_3_ITEM_HASH,
-          quantity: 1,
-        });
-      } else if (mile.milestoneHash === 1684722553) {
-        // Digital Trove (3x Override)
-        rewardItems = [
-          {
-            itemHash: PINNACLE_ITEM_WEAK_HASH,
-            quantity: 1,
-          },
-        ];
-      } else if (mile.milestoneHash === 3632712541) {
-        // Battle Hardened
-        rewardItems.push({
-          itemHash: POWERFUL_TIER_3_ITEM_HASH,
-          quantity: 1,
+          hasConditionalVisibility: false,
         });
       } else if (questRewards?.length) {
         rewardItems.push(...questRewards);
@@ -198,6 +174,7 @@ export function getPinnacleAndPowerfulMilestones(
         rewardItems.push({
           itemHash: POWERFUL_TIER_3_ITEM_HASH,
           quantity: 1,
+          hasConditionalVisibility: false,
         });
       }
     }
@@ -208,6 +185,7 @@ export function getPinnacleAndPowerfulMilestones(
         {
           itemHash: PINNACLE_ITEM_WEAK_HASH,
           quantity: 1,
+          hasConditionalVisibility: false,
         },
       ];
     } else if (
@@ -220,14 +198,7 @@ export function getPinnacleAndPowerfulMilestones(
         {
           itemHash: POWERFUL_TIER_1_ITEM_HASH,
           quantity: 1,
-        },
-      ];
-    } else if ([2540726600, 1424672028].includes(mile.milestoneHash)) {
-      // Variks and Exo-Stranger Challenge
-      rewardItems = [
-        {
-          itemHash: POWERFUL_TIER_1_ITEM_HASH,
-          quantity: 1,
+          hasConditionalVisibility: false,
         },
       ];
     }

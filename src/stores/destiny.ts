@@ -9,7 +9,7 @@ import {
   thunk,
   Thunk,
 } from "easy-peasy";
-import { mapValues, maxBy } from "lodash";
+import { has, mapValues, maxBy } from "lodash";
 import { DisplayDestinyItemComponent } from "../App";
 import {
   CLASS_NAMES,
@@ -117,7 +117,10 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         version,
       });
     } catch (error) {
-      actions.setErrorText(error.message);
+      if (error instanceof Error) {
+        actions.setErrorText(error.message);
+      }
+
       console.error(error);
     } finally {
       actions.setFetching(false);
@@ -174,85 +177,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           characterMilestone,
         });
 
-        // Inject Weekly Harbinger to PublicMilestones
-        allMilestones[1086730368] = {
-          activities:
-            manifest.DestinyMilestoneDefinition[1086730368]?.activities.map(
-              (a) => ({
-                ...a,
-                booleanActivityOptions: {},
-                challengeObjectiveHashes: [1259975935],
-                modifierHashes: [],
-                phaseHashes: [],
-              })
-            ) ?? [],
-          availableQuests: [],
-          milestoneHash: 1086730368,
-          order: 9000,
-          vendorHashes: [],
-          vendors: [],
-        };
-
-        // Inject Weekly Exo Challenge to PublicMilestones
-        allMilestones[1713200903] = {
-          activities:
-            manifest.DestinyMilestoneDefinition[1713200903]?.activities.map(
-              (a) => ({
-                ...a,
-                booleanActivityOptions: {},
-                challengeObjectiveHashes: [],
-                modifierHashes: [],
-                phaseHashes: [],
-              })
-            ) ?? [],
-          availableQuests: [],
-          milestoneHash: 1713200903,
-          order: 9000,
-          vendorHashes: [],
-          vendors: [],
-        };
-
-        // Inject Net Crasher (3x Override Mission Completion) to PublicMilestones
-        allMilestones[966446952] = {
-          activities:
-            manifest.DestinyMilestoneDefinition[966446952]?.activities.map(
-              (a) => ({
-                ...a,
-                booleanActivityOptions: {},
-                challengeObjectiveHashes: [],
-                modifierHashes: [],
-                phaseHashes: [],
-              })
-            ) ?? [],
-          availableQuests: [],
-          milestoneHash: 966446952,
-          order: 9000,
-          vendorHashes: [],
-          vendors: [],
-        };
-
-        // Inject Digital Trove (3x Override Mission Chest) to PublicMilestones
-        allMilestones[1684722553] = {
-          activities:
-            manifest.DestinyMilestoneDefinition[1684722553]?.activities.map(
-              (a) => ({
-                ...a,
-                booleanActivityOptions: {},
-                challengeObjectiveHashes: [],
-                modifierHashes: [],
-                phaseHashes: [],
-              })
-            ) ?? [],
-          availableQuests: [],
-          milestoneHash: 1684722553,
-          order: 9000,
-          vendorHashes: [],
-          vendors: [],
-        };
-        console.log({
-          trove: manifest.DestinyMilestoneDefinition[1684722553],
-        });
-
         for (const act of characterActivities.availableActivities) {
           if (act.activityHash == 4212753278) {
             // presage master
@@ -298,42 +222,6 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               vendors: [],
             };
           } else if (act.recommendedLight === SEASONAL_PINNACLE_CAP + 20) {
-            // Master Empire Hunt shenanigans
-
-            const actDefs =
-              manifest.DestinyActivityDefinition[act.activityHash];
-
-            if (actDefs?.displayProperties?.name?.startsWith("Empire Hunt")) {
-              allMilestones[291895719] = {
-                activities: [],
-                availableQuests: [],
-                milestoneHash: 291895719,
-                order: 9000,
-                vendorHashes: [],
-                vendors: [],
-              };
-              characterMilestone[291895719] = {
-                activities: [act],
-                availableQuests: [],
-                milestoneHash: 291895719,
-                order: 9000,
-                rewards: [
-                  {
-                    rewardCategoryHash: 326786556,
-                    entries: [
-                      {
-                        earned: false,
-                        redeemed: false,
-                        rewardEntryHash: 326786556,
-                      },
-                    ],
-                  },
-                ],
-                values: {},
-                vendorHashes: [],
-                vendors: [],
-              };
-            }
           }
         }
 
@@ -350,6 +238,8 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           let hasAccess = false;
 
           const activeMilestone = characterMilestone[mile.hash];
+
+          const quests = activeMilestone?.availableQuests;
 
           if (!activeMilestone) {
             if (mile.hash === 3603098564) {
@@ -370,7 +260,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                       mileActs[0].activityHash
                     ];
 
-                  hasAccess = characterActivity?.canJoin ?? false;
+                  hasAccess = mile.hasAccess ?? false;
                 }
 
                 if (!mileActs?.[0]?.challenges?.[0].objective.complete) {
@@ -382,18 +272,24 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
                 }
               }
             } else {
-              if (mile.hasActivities) {
-                hasAccess = characterActivities.availableActivities.some(
-                  (act) =>
-                    act.canJoin &&
-                    manifest.DestinyMilestoneDefinition[mile.hash]?.activities
-                      ?.map((a) => a.activityHash)
-                      .includes(act.activityHash)
-                );
+              if (mile.hasAccess) {
+                hasAccess = true;
+              } else if (mile.hasActivities) {
+                if (mile.hash === 1607791277) {
+                  hasAccess = mile.hasAccess;
+                } else {
+                  hasAccess = characterActivities.availableActivities.some(
+                    (act) =>
+                      act.canJoin &&
+                      manifest.DestinyMilestoneDefinition[mile.hash]?.activities
+                        ?.map((a) => a.activityHash)
+                        .includes(act.activityHash)
+                  );
+                }
+
                 completed = 1;
               } else if (mile.hasQuest) {
-                hasAccess = true;
-                completed = 1;
+                completed = quests?.every((q) => q.status.completed) ? 1 : 0;
               }
             }
           } else {
@@ -405,22 +301,9 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
               const activity = milestoneActivities?.[0];
 
               if (activity?.challenges?.length) {
-                // Check for Master Empire Hunt objective, if not exists, it's completed
-                if (mile.hash === 291895719) {
-                  let masterCompleted = true;
+                const challenge = activity.challenges[0];
 
-                  for (const chal of activity.challenges) {
-                    if (chal.objective.objectiveHash === 1980717736) {
-                      masterCompleted = false;
-                      break;
-                    }
-                  }
-                  completed = masterCompleted ? 1 : 0;
-                } else {
-                  const challenge = activity.challenges[0];
-
-                  completed = challenge.objective.complete ? 1 : 0;
-                }
+                completed = challenge.objective.complete ? 1 : 0;
               } else {
                 // Presage challenges will missing if completed
                 completed = 1;
@@ -473,7 +356,9 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
       );
       const accountInventories = [
         ...Object.values(allCharactersInventories).flat(),
-        ...Object.values(equipmentData).map(d => d.items).flat(),
+        ...Object.values(equipmentData)
+          .map((d) => d.items)
+          .flat(),
       ];
 
       const topItemsByChar = Object.keys(equipmentData).reduce((acc, cur) => {
@@ -567,7 +452,10 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         milestones,
       });
     } catch (error) {
-      actions.setErrorText(error.message);
+      if (error instanceof Error) {
+        actions.setErrorText(error.message);
+      }
+
       console.error(error);
     } finally {
       actions.setFetching(false);

@@ -1,4 +1,4 @@
-import { FlagSolid } from "@graywolfai/react-heroicons";
+import { FlagSolid, LockClosedSolid } from "@graywolfai/react-heroicons";
 import clsx from "clsx";
 import React from "react";
 import {
@@ -33,6 +33,7 @@ export function ChecklistItem({
       })}
       key={milestone.hash}
       data-hash={milestone.hash}
+      data-has-access={milestone.hasAccess}
     >
       <img
         className={clsx("w-6 h-6 flex-shrink-0", {
@@ -49,11 +50,12 @@ export function ChecklistItem({
 
       <div className="flex flex-col w-full space-y-1 truncate">
         <span
-          className="w-full truncate"
+          className="inline-flex items-center w-full truncate"
           title={
             milestone.displayProperties.description ?? milestone.friendlyName
           }
         >
+          {milestone.hasAccess ? null : <LockClosedSolid className="w-5 h-5 mr-1" /> }
           {CUSTOM_MILESTONES_PROPERTIES[milestone.friendlyName]?.name ??
             milestone.displayProperties.name}
         </span>
