@@ -83,7 +83,7 @@ async function $http(config: HttpClientConfig) {
           throw new Error("Failed to connect to Bungie.net");
         }
       } catch (e) {
-        throw new Error(e);
+        throw e;
         /* Do nothing if unrecognised or un-parseable 503 */
       }
     } else {
