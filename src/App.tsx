@@ -1,6 +1,7 @@
 import {
   ChevronDoubleLeftSolid,
   ChevronDoubleRightSolid,
+  LoginOutline,
   RefreshOutline,
   ViewBoardsOutline,
   ViewBoardsSolid,
@@ -87,6 +88,7 @@ function NewApp() {
   const loadProfiles = DestinyStores.useStoreActions(
     (actions) => actions.loadProfiles
   );
+  const login = AuthStore.useStoreActions((actions) => actions.loginWithBungie);
   const { hasData, errorText } = DestinyStores.useStoreState((state) => state);
 
   useEffect(() => {
@@ -106,11 +108,21 @@ function NewApp() {
         >
           <div className="absolute inset-0 z-0 bg-gray-900 bg-opacity-70"></div>
           {errorText ? (
-            <>
+            <div className="flex flex-col items-center">
               <h2 className="relative z-20 text-lg font-semibold text-center text-white w-96">
                 {errorText}
               </h2>
-            </>
+              {errorText === "Failed to authenticate" ? (
+                <button
+                  type="button"
+                  className="relative z-20 flex items-center px-4 py-3 mt-4 space-x-3 bg-white rounded-md shadow-md"
+                  onClick={() => login()}
+                >
+                  <LoginOutline className="w-6 h-6" />
+                  <span className="font-semibold">Login with Bungie.net</span>
+                </button>
+              ) : null}
+            </div>
           ) : (
             <div className="relative z-10 overflow-hidden">
               <button
