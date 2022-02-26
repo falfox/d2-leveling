@@ -160,23 +160,7 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
         throw new Error("Failed to retrieve manifest data");
       }
 
-      console.log({
-        XXXXXXXXXXXXXXXXXXX: Object.entries(
-          manifest.DestinyMilestoneDefinition
-        ).map(
-          ([key, value]) => `${key} : ${value?.displayProperties.description}`
-        ),
-      });
       const allMilestones = milestonesData.Response;
-      console.log({
-        AAAAAAAAAAAAAAAAAAAAAA: Object.entries(allMilestones).map(
-          ([key, value]) =>
-            `${key} : ${
-              manifest.DestinyMilestoneDefinition[value?.milestoneHash]
-                ?.displayProperties.description
-            }`
-        ),
-      });
 
       const milestones = Object.keys(progressionsData).reduce((acc, cur) => {
         console.log("========================");
