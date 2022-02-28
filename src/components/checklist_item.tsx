@@ -1,4 +1,3 @@
-import { FlagSolid, LockClosedSolid } from "@graywolfai/react-heroicons";
 import clsx from "clsx";
 import React from "react";
 import {
@@ -6,11 +5,11 @@ import {
   PINNACLE_ITEM_WEAK_HASH,
   POWERFUL_TIER_1_ITEM_HASH,
   POWERFUL_TIER_2_ITEM_HASH,
-  POWERFUL_TIER_3_ITEM_HASH,
+  POWERFUL_TIER_3_ITEM_HASH
 } from "../consts";
 import {
   CUSTOM_MILESTONES_PROPERTIES,
-  DestinyMilestoneDisplay,
+  DestinyMilestoneDisplay
 } from "../services/destiny/milestones";
 
 export function ChecklistItem({
@@ -20,7 +19,7 @@ export function ChecklistItem({
   milestone: DestinyMilestoneDisplay;
   hardCapReached: boolean;
 }) {
-  const completed = milestone.completed;
+  const isAvailable = !milestone.completed && milestone.hasAccess;
   const rewardItem =
     CUSTOM_MILESTONES_PROPERTIES[milestone.friendlyName]?.rewards?.[0]
       ?.itemHash ?? milestone.rewardItems?.[0].itemHash;
@@ -28,8 +27,8 @@ export function ChecklistItem({
   return (
     <li
       className={clsx("flex items-start space-x-2", {
-        "text-gray-400 line-through font-medium": completed,
-        "font-semibold": !completed,
+        "text-gray-400 line-through font-medium": !isAvailable,
+        "font-semibold": isAvailable,
       })}
       key={milestone.hash}
       data-hash={milestone.hash}
@@ -37,8 +36,8 @@ export function ChecklistItem({
     >
       <img
         className={clsx("w-6 h-6 flex-shrink-0", {
-          "bg-gray-700": !completed,
-          "bg-gray-400": completed,
+          "bg-gray-700": isAvailable,
+          "bg-gray-400": !isAvailable,
         })}
         src={`https://www.bungie.net${
           milestone.displayProperties.icon
@@ -55,7 +54,6 @@ export function ChecklistItem({
             milestone.displayProperties.description ?? milestone.friendlyName
           }
         >
-          {milestone.hasAccess ? null : <LockClosedSolid className="w-5 h-5 mr-1" /> }
           {CUSTOM_MILESTONES_PROPERTIES[milestone.friendlyName]?.name ??
             milestone.displayProperties.name}
         </span>
