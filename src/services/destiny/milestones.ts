@@ -61,6 +61,9 @@ export const CUSTOM_MILESTONES_PROPERTIES: {
   MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PINNACLE: {
     name: "Get a team score of 100,000 or better. on Weekly Campaign",
   },
+  MILESTONE_WEEKLY_GRASP_OF_AVARICE_CHALLENGE: {
+    name: 'Complete "Grasp of Avarice"',
+  },
 };
 
 export interface DestinyMilestoneDisplay {
@@ -116,6 +119,18 @@ export function getPinnacleAndPowerfulMilestones(
     },
     friendlyName: "MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PARTICIPATION",
   };
+  // manifest.DestinyMilestoneDefinition[295129163] = {
+  //   ...dares,
+  //   activities: [],
+  //   defaultOrder: 9000,
+  //   displayProperties: {
+  //     ...dares?.displayProperties,
+  //     description: "Complete the weekly campaign mission on any difficulty",
+  //     name: "Weekly Campaign Mission",
+  //     icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_3ba6365522a77a0dcec534d71ce9de89.png",
+  //   },
+  //   friendlyName: "MILESTONE_WEEKLY_DARES_OF_ETERNITY_POWERFUL_CHALLENGE",
+  // };
 
   const filtered = Object.keys(milestones).filter((k) => {
     const def = manifest.DestinyMilestoneDefinition[k];

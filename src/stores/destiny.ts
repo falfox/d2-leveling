@@ -182,6 +182,8 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           }
         }
 
+        // We also need to add defs in [milestones.ts]
+        //
         // Complete Weekly WQ Campaign
         allMilestones[2595878741] = {
           activities: [],
@@ -197,6 +199,58 @@ export const DestinyStores = createContextStore<DestinyStoreModel>({
           activities: [],
           availableQuests: [],
           milestoneHash: 363309766,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Complete Dares of Eternity. Legend difficulty grants additional progress.
+        allMilestones[295129163] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 295129163,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Complete Dares of Eternity with a score of 250000 or higher.
+        allMilestones[475790763] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 475790763,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Open Runic Chests in the Season of the Risen Battlegrounds playlist.
+        [400869111, 400869108, 400869109].forEach((n) => {
+          allMilestones[n] = {
+            activities: [],
+            availableQuests: [],
+            milestoneHash: n,
+            order: 9000,
+            vendorHashes: [],
+            vendors: [],
+          };
+        });
+
+        // Complete "Grasp of Avarice"
+        allMilestones[973171461] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 973171461,
+          order: 9000,
+          vendorHashes: [],
+          vendors: [],
+        };
+
+        // Defeat powerful Cabal and Champions in the "Vox Obscura" Exotic quest.
+        allMilestones[209031920] = {
+          activities: [],
+          availableQuests: [],
+          milestoneHash: 209031920,
           order: 9000,
           vendorHashes: [],
           vendors: [],
