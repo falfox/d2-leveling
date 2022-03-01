@@ -94,7 +94,7 @@ export function getPinnacleAndPowerfulMilestones(
 
   if (!dares) throw new Error("Failed to retrieve prophecy definition");
 
-  // Fake milestone hash for WQ Campaign
+  // Fake milestone hash for WQ Campaign because we missing an icon
   manifest.DestinyMilestoneDefinition[363309766] = {
     ...dares,
     activities: [],
@@ -119,18 +119,6 @@ export function getPinnacleAndPowerfulMilestones(
     },
     friendlyName: "MILESTONE_WEEKLY_WITCH_QUEEN_CAMPAIGN_PARTICIPATION",
   };
-  // manifest.DestinyMilestoneDefinition[295129163] = {
-  //   ...dares,
-  //   activities: [],
-  //   defaultOrder: 9000,
-  //   displayProperties: {
-  //     ...dares?.displayProperties,
-  //     description: "Complete the weekly campaign mission on any difficulty",
-  //     name: "Weekly Campaign Mission",
-  //     icon: "/common/destiny2_content/icons/DestinyMilestoneDefinition_3ba6365522a77a0dcec534d71ce9de89.png",
-  //   },
-  //   friendlyName: "MILESTONE_WEEKLY_DARES_OF_ETERNITY_POWERFUL_CHALLENGE",
-  // };
 
   const filtered = Object.keys(milestones).filter((k) => {
     const def = manifest.DestinyMilestoneDefinition[k];
