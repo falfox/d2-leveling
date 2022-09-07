@@ -10,6 +10,7 @@ import {
   PINNACLE_ITEM_HASH,
   PINNACLE_ITEM_WEAK_HASH,
   POWERFUL_TIER_1_ITEM_HASH,
+  POWERFUL_TIER_2_ITEM_HASH,
   POWERFUL_TIER_3_ITEM_HASH,
 } from "../../consts";
 import { ManifestData } from "../bungie";
@@ -202,6 +203,15 @@ export function getPinnacleAndPowerfulMilestones(
       rewardItems = [
         {
           itemHash: POWERFUL_TIER_1_ITEM_HASH,
+          quantity: 1,
+          hasConditionalVisibility: true,
+        },
+      ];
+    } else if ([1194402836].includes(mile.milestoneHash)) {
+      // The Astral Seas
+      rewardItems = [
+        {
+          itemHash: POWERFUL_TIER_2_ITEM_HASH,
           quantity: 1,
           hasConditionalVisibility: true,
         },
