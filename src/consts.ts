@@ -73,9 +73,9 @@ export const ALL_POWERFUL_ITEM_HASH = [
   POWERFUL_LEGACY_GEAR_ITEM_HASH,
 ];
 
-export const SEASONAL_SOFT_CAP = 1520;
-export const SEASONAL_HARD_CAP = 1570;
-export const SEASONAL_PINNACLE_CAP = 1580;
+export const SEASONAL_SOFT_CAP = 1530;
+export const SEASONAL_HARD_CAP = 1580;
+export const SEASONAL_PINNACLE_CAP = 1590;
 
 export const CLASS_TITAN = "titan";
 export const CLASS_HUNTER = "hunter";
@@ -88,4 +88,5 @@ export const RACE_AWOKEN = "awoken";
 export const RACE_EXO = "exo";
 
 export const RACE_NAMES = [RACE_HUMAN, RACE_AWOKEN, RACE_EXO];
-export const BACKGROUND_IMAGE = "https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt798a7bf653b0725f/62f135af5ab928718a863af5/s18-media-screenshot-5.jpg";
+export const BACKGROUND_IMAGE =
+  "https://images.contentstack.io/v3/assets/blte410e3b15535c144/blt1c6624804c2e304a/63864052fa033a109b5dc71f/s19-media-wallpaper-6.jpg";
